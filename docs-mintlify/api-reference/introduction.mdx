@@ -1,0 +1,99 @@
+---
+title: API Reference
+description: MyAppCEO API endpoints and usage
+---
+
+# API Reference
+
+REST API for integrating with MyAppCEO.
+
+## Base URL
+
+```
+https://api.mvplabx.com/v1
+```
+
+## Authentication
+
+All requests require a Bearer token.
+
+```http
+Authorization: Bearer YOUR_TOKEN
+```
+
+Get your token from the dashboard or via OAuth flow.
+
+## Response format
+
+### Success
+
+```json
+{
+  "success": true,
+  "data": { ... }
+}
+```
+
+### Error
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Error description"
+  }
+}
+```
+
+## Rate limits
+
+| Plan | Requests/min |
+|------|--------------|
+| Free | 60 |
+| Pro | 300 |
+| Enterprise | Unlimited |
+
+## Endpoints
+
+| Category | Endpoints |
+|----------|-----------|
+| [Listings](/api-reference/listings/create) | Create, update, list listings |
+| [Campaigns](/api-reference/campaigns/create) | Create campaigns, invest |
+| [Escrow](/api-reference/escrow/create) | Manage escrow deals |
+
+## Pagination
+
+List endpoints use cursor-based pagination:
+
+```http
+GET /listings?limit=20&cursor=abc123
+```
+
+Response includes `next_cursor` for the next page.
+
+## Webhooks
+
+Subscribe to events:
+
+| Event | Trigger |
+|-------|---------|
+| `listing.created` | New listing published |
+| `listing.sold` | Listing purchased |
+| `campaign.funded` | Campaign reached goal |
+| `investment.created` | New investment made |
+| `escrow.released` | Funds released |
+
+### Webhook payload
+
+```json
+{
+  "event": "listing.sold",
+  "data": {
+    "listing_id": "uuid",
+    "buyer_id": "uuid",
+    "amount": 50000
+  },
+  "timestamp": "2026-04-10T12:00:00Z"
+}
+```

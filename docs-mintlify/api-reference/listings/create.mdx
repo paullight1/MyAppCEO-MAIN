@@ -1,0 +1,84 @@
+---
+title: Create Listing
+description: Create a new marketplace listing
+---
+
+# Create Listing
+
+Create a new listing on the marketplace.
+
+## Endpoint
+
+```http
+POST /listings
+```
+
+## Request body
+
+```json
+{
+  "title": "My SaaS App",
+  "description": "Profitable SaaS with 5K MRR",
+  "price": 150000,
+  "category": "saas",
+  "app_id": "uuid",
+  "stake_percentage": 100,
+  "images": ["url1", "url2"],
+  "metrics": {
+    "revenue_monthly": 5000,
+    "users_monthly": 2500,
+    "growth_rate": 15
+  }
+}
+```
+
+## Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Listing title (max 100 chars) |
+| `description` | text | Yes | Full description |
+| `price` | number | Yes | Asking price in USD |
+| `category` | string | Yes | `saas`, `mobile`, `api`, `other` |
+| `app_id` | uuid | Yes | Linked app ID |
+| `stake_percentage` | number | No | For partial sales (5-100) |
+| `images` | array | No | Image URLs |
+| `metrics` | object | No | App performance data |
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "title": "My SaaS App",
+    "status": "pending",
+    "created_at": "2026-04-10T12:00:00Z"
+  }
+}
+```
+
+## Error codes
+
+| Code | Description |
+|------|-------------|
+| `UNAUTHORIZED` | Invalid or missing token |
+| `APP_NOT_FOUND` | App ID does not exist |
+| `INVALID_PRICE` | Price below minimum ($500) |
+| `DUPLICATE_LISTING` | App already listed |
+
+## Example
+
+```bash
+curl -X POST https://api.mvplabx.com/v1/listings \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "My SaaS App",
+    "description": "Profitable SaaS",
+    "price": 150000,
+    "category": "saas",
+    "app_id": "app-uuid-here"
+  }'
+```

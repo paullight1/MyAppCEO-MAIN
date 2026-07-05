@@ -1,0 +1,83 @@
+---
+title: Listings
+description: Marketplace listings for buying and selling apps
+---
+
+# Listings
+
+Listings are marketplace entries for buying and selling digital assets.
+
+## What is a Listing
+
+A Listing represents an app or digital asset available for sale on the marketplace.
+
+## When to use
+
+- Sell your app or digital asset
+- Discover apps to acquire
+- List a partial stake for sale
+
+## Listing types
+
+| Type | Description |
+|------|-------------|
+| `full_sale` | Sell 100% ownership |
+| `partial_stake` | Sell a percentage (5-50%) |
+| `partnership` | Seek a co-owner |
+
+## Listing properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | uuid | Unique identifier |
+| `title` | string | Listing title |
+| `description` | text | Full description |
+| `price` | number | Asking price (USD) |
+| `stake_percentage` | number | Percentage for partial sales |
+| `category` | string | `saas`, `mobile`, `api`, `other` |
+| `status` | enum | `draft`, `active`, `pending`, `sold` |
+| `app_id` | uuid | Linked app ID |
+| `owner_id` | uuid | Seller user ID |
+
+## Listing lifecycle
+
+```
+draft → active → pending → sold
+         ↓
+       expired
+```
+
+### Creating a listing
+
+1. Navigate to `/listings/new`
+2. Select linked app or create new
+3. Set price and terms
+4. Add images and details
+5. Publish
+
+### Listing review
+
+All listings go through review:
+
+| Status | Description |
+|--------|-------------|
+| `draft` | Not submitted |
+| `pending` | Under review |
+| `active` | Live on marketplace |
+| `rejected` | Needs revision |
+
+## Related concepts
+
+- [Apps](/concepts/apps) - Apps linked to listings
+- [Escrow](/concepts/escrow) - Secure payment for sales
+- [Campaigns](/concepts/campaigns) - Raise investment instead of selling
+
+## API
+
+```http
+GET /listings
+GET /listings/:id
+POST /listings
+PATCH /listings/:id
+DELETE /listings/:id
+```

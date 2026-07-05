@@ -1,0 +1,79 @@
+---
+title: Create Escrow
+description: Create an escrow deal
+---
+
+# Create Escrow
+
+Create a new escrow deal for a transaction.
+
+## Endpoint
+
+```http
+POST /escrow
+```
+
+## Request body
+
+```json
+{
+  "counterparty_email": "seller@example.com",
+  "amount": 10000,
+  "currency": "USD",
+  "description": "App acquisition deal",
+  "milestones": [
+    { "title": "Initial payment", "amount": 3000, "due_date": "2026-05-01" },
+    { "title": "Source code transfer", "amount": 3500, "due_date": "2026-05-15" },
+    { "title": "Final payment", "amount": 3500, "due_date": "2026-05-30" }
+  ]
+}
+```
+
+## Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `counterparty_email` | string | Yes | Other party's email |
+| `amount` | number | Yes | Total escrow amount |
+| `currency` | string | No | Currency code (default: USD) |
+| `description` | string | Yes | Deal description |
+| `milestones` | array | Yes | Payment milestones |
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "pending",
+    "amount": 10000,
+    "created_at": "2026-04-10T12:00:00Z"
+  }
+}
+```
+
+## Error codes
+
+| Code | Description |
+|------|-------------|
+| `USER_NOT_FOUND` | Counterparty not found |
+| `INVALID_AMOUNT` | Amount below minimum ($100) |
+| `MILESTONE_MISMATCH` | Milestones don't sum to total |
+
+## Example
+
+```bash
+curl -X POST https://api.mvplabx.com/v1/escrow \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "counterparty_email": "seller@example.com",
+    "amount": 10000,
+    "description": "App acquisition",
+    "milestones": [
+      { "title": "Start", "amount": 5000 },
+      { "title": "Complete", "amount": 5000 }
+    ]
+  }'
+```

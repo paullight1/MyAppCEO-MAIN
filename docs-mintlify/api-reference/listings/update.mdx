@@ -1,0 +1,63 @@
+---
+title: Update Listing
+description: Update an existing listing
+---
+
+# Update Listing
+
+Update a listing's details.
+
+## Endpoint
+
+```http
+PATCH /listings/:id
+```
+
+## Parameters
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | string | New title |
+| `description` | text | New description |
+| `price` | number | New price |
+| `status` | string | `draft`, `active`, `paused` |
+
+## Request body
+
+```json
+{
+  "title": "Updated Title",
+  "price": 120000
+}
+```
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "title": "Updated Title",
+    "price": 120000,
+    "updated_at": "2026-04-10T12:00:00Z"
+  }
+}
+```
+
+## Error codes
+
+| Code | Description |
+|------|-------------|
+| `NOT_FOUND` | Listing does not exist |
+| `FORBIDDEN` | Not the listing owner |
+| `INVALID_STATUS` | Cannot update sold listing |
+
+## Example
+
+```bash
+curl -X PATCH https://api.mvplabx.com/v1/listings/uuid \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"price": 120000}'
+```

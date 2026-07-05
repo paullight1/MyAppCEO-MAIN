@@ -1,0 +1,60 @@
+---
+title: Apps
+description: Manage your applications in MyAppCEO
+---
+
+# Apps
+
+Apps are the core entities you manage in MyAppCEO.
+
+## What is an App
+
+An App represents a digital product (SaaS, mobile app, API) that you own and manage.
+
+## When to use
+
+- Track performance metrics for your app
+- Manage app settings and configurations
+- View analytics and user data
+- Prepare for sale or investment
+
+## App properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | uuid | Unique identifier |
+| `name` | string | App name |
+| `description` | text | App description |
+| `url` | string | Live URL |
+| `status` | enum | `active`, `maintenance`, `sold` |
+| `owner_id` | uuid | Owner user ID |
+| `created_at` | timestamp | Creation date |
+
+## App lifecycle
+
+```
+created → active → maintenance → sold/archived
+```
+
+### Status transitions
+
+| From | To | Trigger |
+|------|-----|---------|
+| active | maintenance | Manual toggle |
+| maintenance | active | Manual toggle |
+| active | sold | Sale completed |
+
+## Related concepts
+
+- [Listings](/concepts/listings) - Sell your app on the marketplace
+- [Campaigns](/concepts/campaigns) - Raise investment for your app
+- [Analytics](/guides/view-analytics) - Track app performance
+
+## API
+
+```http
+GET /api/apps
+GET /api/apps/:id
+POST /api/apps
+PATCH /api/apps/:id
+```

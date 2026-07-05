@@ -1,0 +1,158 @@
+---
+title: Invest in a Campaign
+description: Invest in app campaigns and build your portfolio
+---
+
+# Invest in a Campaign
+
+Invest in app campaigns and earn ROI from app revenue.
+
+## Prerequisites
+
+- Verified MyAppCEO account
+- Funds in wallet (minimum $100)
+- Completed investor profile
+
+## Steps
+
+### 1. Browse campaigns
+
+Navigate to `/campaigns` to view active campaigns.
+
+Filter by:
+- Category (SaaS, Mobile, API)
+- Funding progress
+- Minimum investment
+- ROI potential
+
+### 2. Evaluate a campaign
+
+Before investing, review:
+
+| Metric | What to check |
+|--------|---------------|
+| Revenue | Verified monthly revenue |
+| Growth | Month-over-month growth |
+| Churn | User retention rate |
+| Team | Founder experience |
+| Terms | ROI schedule, exit clauses |
+
+### 3. View campaign details
+
+Click on a campaign to see:
+- App metrics and charts
+- Use of funds breakdown
+- Investment tiers
+- Investor Q&A
+
+### 4. Click Invest
+
+Select investment amount:
+
+```typescript
+// Investment calculation
+const investment = {
+  campaign_id: 'uuid',
+  amount: 500,
+  tier: 'Silver'
+}
+
+// Stake received
+const stake = (amount / goal_amount) * max_stake
+// Example: (500 / 100000) * 20 = 0.1%
+```
+
+### 5. Confirm payment
+
+1. Review investment summary
+2. Confirm payment source
+3. Click **Confirm Investment**
+
+Funds are held in escrow until campaign ends.
+
+### 6. Track your investment
+
+View at `/my-investments`:
+- Investment status
+- Stake percentage
+- Expected ROI
+- Campaign progress
+
+## Code example
+
+```typescript
+// Invest via API
+const investment = await fetch('/api/campaigns/:id/invest', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  },
+  body: JSON.stringify({
+    amount: 500,
+    tier: 'Silver'
+  })
+})
+```
+
+## After campaign succeeds
+
+When the campaign reaches its goal:
+
+1. Your stake is confirmed
+2. Investment status → `active`
+3. You receive access to:
+   - App performance dashboard
+   - Monthly ROI reports
+   - Investor updates
+
+## After campaign fails
+
+If the campaign doesn't reach its goal:
+
+1. Funds automatically refunded
+2. Investment status → `refunded`
+3. Money returns to your wallet
+
+## ROI distribution
+
+You receive ROI based on:
+
+```
+Monthly ROI = App Revenue × Your Stake %
+```
+
+Example:
+- App revenue: $10,000/month
+- Your stake: 0.5%
+- Your ROI: $50/month
+
+### ROI schedule
+
+| Day | Action |
+|-----|--------|
+| 1st | Revenue calculated |
+| 5th | ROI distributed to wallet |
+
+## Selling your stake
+
+You can sell your stake on the secondary market:
+
+1. Go to `/my-investments`
+2. Select investment
+3. Click **List for Sale**
+4. Set your asking price
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Insufficient funds | Add funds to wallet |
+| Campaign not accepting | Check campaign status |
+| Payment failed | Verify payment method |
+
+## Next steps
+
+- [Track your portfolio](/guides/track-portfolio)
+- [Sell your stakes](/guides/sell-stake)
+- [Investment concepts](/concepts/investments)

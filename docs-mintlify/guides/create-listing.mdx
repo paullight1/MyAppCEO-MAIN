@@ -1,0 +1,116 @@
+---
+title: Create a Listing
+description: List your app for sale on the marketplace
+---
+
+# Create a Listing
+
+List your app or digital asset for sale on the marketplace.
+
+## Prerequisites
+
+- Active MyAppCEO account
+- App to sell (or create new)
+- Verified identity for payments
+
+## Steps
+
+### 1. Navigate to create listing
+
+Go to `/listings/new` or click **Create Listing** from dashboard.
+
+### 2. Select or create app
+
+Choose an existing app or create a new entry:
+
+```typescript
+// App data required
+{
+  name: "My SaaS App",
+  description: "Description here",
+  url: "https://myapp.com",
+  revenue_monthly: 5000
+}
+```
+
+### 3. Set listing details
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| Title | Yes | Listing title |
+| Description | Yes | Full description |
+| Price | Yes | Asking price |
+| Category | Yes | `saas`, `mobile`, `api`, `other` |
+| Images | Recommended | Screenshots, logos |
+
+### 4. Choose sale type
+
+**Full Sale**
+- Transfer 100% ownership
+- One-time payment
+
+**Partial Stake**
+- Sell 5-50% ownership
+- Retain control
+
+### 5. Add financials
+
+Provide verified metrics:
+
+```typescript
+{
+  revenue_monthly: 5000,
+  users_monthly: 2500,
+  growth_rate: 15,
+  churn_rate: 3
+}
+```
+
+### 6. Submit for review
+
+Click **Submit for Review**.
+
+Review typically takes 24-48 hours.
+
+## After approval
+
+Once approved:
+
+1. Listing appears on marketplace
+2. Buyers can make offers
+3. You receive notifications
+
+## Code example
+
+```typescript
+// Create listing via API
+const response = await fetch('/api/listings', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  },
+  body: JSON.stringify({
+    title: 'My SaaS App',
+    description: 'Profitable SaaS with 5K MRR',
+    price: 150000,
+    category: 'saas',
+    app_id: 'uuid-here',
+    stake_percentage: 100
+  })
+})
+```
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| App not found | Create app first |
+| Price too low | Minimum $500 |
+| Review rejected | Check email for details |
+
+## Next steps
+
+- [Manage your listings](/listings/manage)
+- [Set up escrow](/concepts/escrow)
+- [Launch a campaign instead](/guides/launch-campaign)

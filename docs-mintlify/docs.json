@@ -1,0 +1,95 @@
+{
+  "name": "MyAppCEO Documentation",
+  "logo": {
+    "light": "/logo.svg",
+    "dark": "/logo-dark.svg"
+  },
+  "favicon": "/favicon.ico",
+  "colors": {
+    "primary": "#6366F1",
+    "light": "#818CF8",
+    "dark": "#4F46E5"
+  },
+  "topbarCtaButton": {
+    "type": "link",
+    "name": "Open Dashboard",
+    "url": "/dashboard"
+  },
+  "anchors": [
+    {
+      "name": "Concepts",
+      "icon": "lightbulb",
+      "url": "concepts",
+      "color": "#F59E0B"
+    },
+    {
+      "name": "Guides",
+      "icon": "book",
+      "url": "guides",
+      "color": "#10B981"
+    },
+    {
+      "name": "API",
+      "icon": "code",
+      "url": "api-reference",
+      "color": "#8B5CF6"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": ["index", "quickstart"]
+    },
+    {
+      "group": "Core Concepts",
+      "pages": [
+        "concepts/apps",
+        "concepts/listings",
+        "concepts/campaigns",
+        "concepts/investments",
+        "concepts/escrow"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/create-listing",
+        "guides/launch-campaign",
+        "guides/invest-in-campaign",
+        "guides/manage-escrow"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/introduction",
+        {
+          "group": "Listings",
+          "pages": [
+            "api-reference/listings/create",
+            "api-reference/listings/update",
+            "api-reference/listings/list"
+          ]
+        },
+        {
+          "group": "Campaigns",
+          "pages": [
+            "api-reference/campaigns/create",
+            "api-reference/campaigns/invest"
+          ]
+        },
+        {
+          "group": "Escrow",
+          "pages": [
+            "api-reference/escrow/create",
+            "api-reference/escrow/release"
+          ]
+        }
+      ]
+    }
+  ],
+  "feedback": {
+    "suggestEdit": true,
+    "raiseIssue": true
+  }
+}

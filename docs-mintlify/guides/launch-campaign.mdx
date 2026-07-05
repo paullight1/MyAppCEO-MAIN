@@ -1,0 +1,146 @@
+---
+title: Launch a Campaign
+description: Raise capital by launching an investment campaign
+---
+
+# Launch a Campaign
+
+Raise capital for your app by selling stakes to investors.
+
+## Prerequisites
+
+- Active app with verified metrics
+- MyAppCEO account in good standing
+- Minimum 3 months revenue history
+
+## Steps
+
+### 1. Navigate to create campaign
+
+Go to `/campaigns/new` from dashboard.
+
+### 2. Select your app
+
+Choose the app to raise capital for.
+
+Requirements:
+- Active status
+- Verified revenue
+- At least 3 months history
+
+### 3. Set funding goal
+
+```typescript
+{
+  goal_amount: 100000,  // Target raise
+  min_investment: 100,   // Minimum per investor
+  max_stake: 20,         // Max total stake offered
+  duration_days: 30      // Campaign length
+}
+```
+
+### 4. Define investment tiers
+
+Create tiered options:
+
+| Tier | Amount | Stake | Benefits |
+|------|--------|-------|----------|
+| Bronze | $100 | 0.1% | Updates |
+| Silver | $500 | 0.5% | Updates + Q&A |
+| Gold | $1,000 | 1% | Updates + voting |
+
+### 5. Add campaign details
+
+Required sections:
+- **Pitch**: Why invest? (500 chars)
+- **Use of funds**: How will capital be used?
+- **Timeline**: Projected milestones
+- **Team**: Who's building
+
+### 6. Upload media
+
+Add:
+- Pitch video (recommended)
+- App screenshots
+- Revenue charts
+- Growth metrics
+
+### 7. Set terms
+
+Define:
+- ROI distribution schedule
+- Investor rights
+- Exit conditions
+
+### 8. Submit for review
+
+Click **Submit Campaign**.
+
+Review takes 48-72 hours.
+
+## Code example
+
+```typescript
+// Create campaign via API
+const campaign = await fetch('/api/campaigns', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  },
+  body: JSON.stringify({
+    app_id: 'uuid-here',
+    title: 'Scale My SaaS',
+    goal_amount: 100000,
+    min_investment: 100,
+    max_stake: 20,
+    start_date: '2026-05-01',
+    end_date: '2026-05-31',
+    tiers: [
+      { name: 'Bronze', amount: 100, stake: 0.1 },
+      { name: 'Silver', amount: 500, stake: 0.5 },
+      { name: 'Gold', amount: 1000, stake: 1.0 }
+    ]
+  })
+})
+```
+
+## During the campaign
+
+Monitor at `/my-campaigns`:
+
+- Funds raised
+- Investor count
+- Days remaining
+- Questions from investors
+
+## If successful
+
+When goal is reached:
+
+1. Funds transfer to your wallet
+2. Stake distributed to investors
+3. Investors added to updates list
+4. ROI distribution begins
+
+## If unsuccessful
+
+If goal not met:
+
+1. All investments refunded
+2. Campaign marked as failed
+3. Can relaunch after 30 days
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| App not eligible | Add revenue history |
+| Goal too high | Reduce to realistic target |
+| Review rejected | Check email for feedback |
+
+## Next steps
+
+- [Promote your campaign](/guides/promote-campaign)
+- [Manage investor relations](/guides/investor-relations)
+- [Set up ROI distribution](/guides/roi-setup)

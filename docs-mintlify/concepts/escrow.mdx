@@ -1,0 +1,107 @@
+---
+title: Escrow
+description: Secure milestone-based payments for deals
+---
+
+# Escrow
+
+Escrow provides secure, milestone-based payment handling for app transactions.
+
+## What is Escrow
+
+Escrow holds funds securely until deal conditions are met.
+
+## When to use
+
+- Buying or selling an app
+- Hiring developers with milestone payments
+- Partnership deals with conditional payouts
+
+## Escrow properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | uuid | Unique identifier |
+| `deal_id` | uuid | Linked deal |
+| `amount` | number | Total escrow amount |
+| `currency` | string | Currency code |
+| `status` | enum | `pending`, `funded`, `released`, `disputed` |
+| `milestones` | array | Payment milestones |
+
+## Milestone structure
+
+Each escrow deal has milestones:
+
+```typescript
+interface Milestone {
+  id: string
+  title: string
+  amount: number
+  status: 'pending' | 'completed' | 'disputed'
+  due_date: string
+}
+```
+
+## Escrow lifecycle
+
+```
+created → funded → milestones completed → released
+                         ↓
+                    disputed → resolved
+```
+
+### Creating an escrow
+
+1. Navigate to `/escrow`
+2. Click **Create Deal**
+3. Add counterparty
+4. Set milestones and amounts
+5. Both parties approve
+
+### Funding escrow
+
+1. Buyer transfers funds
+2. Funds held securely
+3. Status changes to `funded`
+
+### Releasing funds
+
+Funds release when milestones are marked complete:
+
+1. Milestone work submitted
+2. Buyer approves
+3. Funds released to seller
+
+## Dispute resolution
+
+If a dispute occurs:
+
+1. Either party raises dispute
+2. Status changes to `disputed`
+3. Mediation process begins
+4. Resolution or refund
+
+## Escrow fees
+
+| Amount | Fee |
+|--------|-----|
+| < $10,000 | 2.5% |
+| $10,000 - $50,000 | 2% |
+| > $50,000 | 1.5% |
+
+## Related concepts
+
+- [Listings](/concepts/listings) - Apps for sale
+- [Campaigns](/concepts/campaigns) - Investment deals
+
+## API
+
+```http
+GET /escrow
+GET /escrow/:id
+POST /escrow
+POST /escrow/:id/fund
+POST /escrow/:id/milestones/:mid/complete
+POST /escrow/:id/release
+POST /escrow/:id/dispute
+```

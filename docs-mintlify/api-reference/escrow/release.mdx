@@ -1,0 +1,61 @@
+---
+title: Release Escrow Funds
+description: Release funds from escrow
+---
+
+# Release Escrow Funds
+
+Release escrow funds upon milestone completion.
+
+## Endpoint
+
+```http
+POST /escrow/:id/release
+```
+
+## Request body
+
+```json
+{
+  "milestone_id": "uuid",
+  "note": "Work completed and verified"
+}
+```
+
+## Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `milestone_id` | uuid | Yes | Milestone to release |
+| `note` | string | No | Release note |
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "milestone_id": "uuid",
+    "amount_released": 3500,
+    "status": "completed",
+    "released_at": "2026-04-10T12:00:00Z"
+  }
+}
+```
+
+## Error codes
+
+| Code | Description |
+|------|-------------|
+| `NOT_FUNDED` | Escrow not yet funded |
+| `ALREADY_RELEASED` | Milestone already released |
+| `NOT_MILESTONE_OWNER` | Not authorized to release |
+
+## Example
+
+```bash
+curl -X POST https://api.mvplabx.com/v1/escrow/escrow-uuid/release \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"milestone_id": "milestone-uuid"}'
+```

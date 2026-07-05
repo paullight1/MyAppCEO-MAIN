@@ -1,0 +1,88 @@
+---
+title: Create Campaign
+description: Create an investment campaign
+---
+
+# Create Campaign
+
+Create a new investment campaign for your app.
+
+## Endpoint
+
+```http
+POST /campaigns
+```
+
+## Request body
+
+```json
+{
+  "app_id": "uuid",
+  "title": "Scale My SaaS",
+  "goal_amount": 100000,
+  "min_investment": 100,
+  "max_stake": 20,
+  "start_date": "2026-05-01",
+  "end_date": "2026-05-31",
+  "tiers": [
+    { "name": "Bronze", "amount": 100, "stake": 0.1 },
+    { "name": "Silver", "amount": 500, "stake": 0.5 },
+    { "name": "Gold", "amount": 1000, "stake": 1.0 }
+  ],
+  "pitch": "Help us scale to 10K users",
+  "use_of_funds": "Marketing 40%, Dev 40%, Operations 20%"
+}
+```
+
+## Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `app_id` | uuid | Yes | App to fund |
+| `title` | string | Yes | Campaign title |
+| `goal_amount` | number | Yes | Funding target (USD) |
+| `min_investment` | number | Yes | Minimum investment |
+| `max_stake` | number | Yes | Maximum stake % offered |
+| `start_date` | date | Yes | Campaign start |
+| `end_date` | date | Yes | Campaign end |
+| `tiers` | array | Yes | Investment tier options |
+| `pitch` | string | Yes | Investment pitch |
+| `use_of_funds` | string | Yes | How funds will be used |
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid",
+    "status": "draft",
+    "created_at": "2026-04-10T12:00:00Z"
+  }
+}
+```
+
+## Error codes
+
+| Code | Description |
+|------|-------------|
+| `APP_NOT_ELIGIBLE` | App doesn't meet requirements |
+| `INVALID_GOAL` | Goal below minimum ($10,000) |
+| `DATE_INVALID` | End date before start date |
+
+## Example
+
+```bash
+curl -X POST https://api.mvplabx.com/v1/campaigns \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "app_id": "app-uuid",
+    "title": "Scale My SaaS",
+    "goal_amount": 100000,
+    "min_investment": 100,
+    "max_stake": 20,
+    "start_date": "2026-05-01",
+    "end_date": "2026-05-31"
+  }'
+```

@@ -1,0 +1,96 @@
+---
+title: Investments
+description: Invest in app campaigns and track your portfolio
+---
+
+# Investments
+
+Investments represent your stakes in app campaigns.
+
+## What is an Investment
+
+An Investment is a financial stake purchased in an app through a campaign.
+
+## When to use
+
+- Invest in promising apps
+- Build a portfolio of app stakes
+- Earn passive ROI from app revenue
+
+## Investment properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | uuid | Unique identifier |
+| `campaign_id` | uuid | Linked campaign |
+| `investor_id` | uuid | Investor user ID |
+| `amount` | number | Investment amount (USD) |
+| `stake_percentage` | number | Ownership % |
+| `status` | enum | `pending`, `active`, `refunded` |
+| `created_at` | timestamp | Investment date |
+
+## Investment flow
+
+```
+browse campaigns → invest → pending
+                            ↓
+                    campaign funded → active
+                            ↓
+                    receive monthly ROI
+```
+
+## Making an investment
+
+1. Browse campaigns at `/campaigns`
+2. Review campaign details and app metrics
+3. Click **Invest**
+4. Enter investment amount
+5. Confirm payment
+
+### Minimum investment
+
+| Campaign Type | Minimum |
+|---------------|---------|
+| Standard | $100 |
+| Premium | $500 |
+| Exclusive | $1,000 |
+
+## Tracking your portfolio
+
+View all investments at `/my-investments`:
+
+- Total invested amount
+- Total stake percentage
+- ROI earned
+- App performance metrics
+
+## ROI distribution
+
+Investors receive ROI monthly or quarterly:
+
+```typescript
+// ROI calculation
+monthlyROI = (appRevenue × stakePercentage) / 100
+```
+
+### ROI schedule
+
+| Day | Action |
+|-----|--------|
+| 1st | Revenue calculated |
+| 5th | ROI distributed |
+| 15th | Report published |
+
+## Related concepts
+
+- [Campaigns](/concepts/campaigns) - Browse investment opportunities
+- [Apps](/concepts/apps) - Apps you've invested in
+- [Escrow](/concepts/escrow) - Secure investment handling
+
+## API
+
+```http
+GET /my-investments
+POST /campaigns/:id/invest
+GET /investments/:id
+```

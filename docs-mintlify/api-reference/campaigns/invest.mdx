@@ -1,0 +1,63 @@
+---
+title: Invest in Campaign
+description: Invest in an active campaign
+---
+
+# Invest in Campaign
+
+Make an investment in an active campaign.
+
+## Endpoint
+
+```http
+POST /campaigns/:id/invest
+```
+
+## Request body
+
+```json
+{
+  "amount": 500,
+  "tier": "Silver"
+}
+```
+
+## Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `amount` | number | Yes | Investment amount (USD) |
+| `tier` | string | No | Tier name (if applicable) |
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "investment_id": "uuid",
+    "amount": 500,
+    "stake_percentage": 0.1,
+    "status": "pending",
+    "created_at": "2026-04-10T12:00:00Z"
+  }
+}
+```
+
+## Error codes
+
+| Code | Description |
+|------|-------------|
+| `CAMPAIGN_NOT_ACTIVE` | Campaign not accepting investments |
+| `INSUFFICIENT_FUNDS` | Wallet balance too low |
+| `BELOW_MINIMUM` | Amount below minimum investment |
+| `CAMPAIGN_ENDED` | Campaign deadline passed |
+
+## Example
+
+```bash
+curl -X POST https://api.mvplabx.com/v1/campaigns/campaign-uuid/invest \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 500, "tier": "Silver"}'
+```

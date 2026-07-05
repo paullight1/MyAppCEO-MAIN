@@ -1,0 +1,52 @@
+---
+title: List Listings
+description: Retrieve marketplace listings
+---
+
+# List Listings
+
+Retrieve paginated listings from the marketplace.
+
+## Endpoint
+
+```http
+GET /listings
+```
+
+## Query parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `limit` | number | Results per page (default: 20) |
+| `cursor` | string | Pagination cursor |
+| `category` | string | Filter by category |
+| `min_price` | number | Minimum price |
+| `max_price` | number | Maximum price |
+| `status` | string | Filter by status |
+
+## Response
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "title": "My SaaS App",
+      "price": 150000,
+      "category": "saas",
+      "status": "active",
+      "created_at": "2026-04-10T12:00:00Z"
+    }
+  ],
+  "next_cursor": "abc123",
+  "has_more": true
+}
+```
+
+## Example
+
+```bash
+curl "https://api.mvplabx.com/v1/listings?category=saas&limit=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```

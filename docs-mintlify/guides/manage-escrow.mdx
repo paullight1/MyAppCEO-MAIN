@@ -1,0 +1,161 @@
+---
+title: Manage Escrow Deals
+description: Create and manage escrow deals for secure transactions
+---
+
+# Manage Escrow Deals
+
+Set up milestone-based escrow for secure app transactions.
+
+## Prerequisites
+
+- Verified MyAppCEO account
+- Counterparty with verified account
+- Funds for escrow (if buyer)
+
+## Creating an escrow deal
+
+### As a buyer
+
+1. Navigate to `/escrow`
+2. Click **Create Deal**
+3. Enter counterparty email
+4. Set total amount
+
+### As a seller
+
+1. Receive deal invitation
+2. Review terms
+3. Accept or negotiate
+
+### Setting milestones
+
+Add milestones for progressive payments:
+
+```typescript
+const milestones = [
+  { title: 'Initial payment', amount: 2500, due_date: '2026-05-01' },
+  { title: 'Source code transfer', amount: 2500, due_date: '2026-05-15' },
+  { title: 'Domain handover', amount: 2500, due_date: '2026-05-20' },
+  { title: 'Final payment', amount: 2500, due_date: '2026-05-30' }
+]
+```
+
+## Funding escrow
+
+### Steps for buyer
+
+1. Open the deal
+2. Click **Fund Escrow**
+3. Select payment method
+4. Confirm transfer
+
+Funds are held securely until milestones complete.
+
+## Completing milestones
+
+### As a seller
+
+1. Complete the milestone work
+2. Submit proof/deliverables
+3. Mark milestone as **Ready for Review**
+
+### As a buyer
+
+1. Review submitted work
+2. Approve or request changes
+3. Funds release automatically on approval
+
+## Code example
+
+```typescript
+// Create escrow deal
+const deal = await fetch('/api/escrow', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  },
+  body: JSON.stringify({
+    counterparty_email: 'seller@example.com',
+    amount: 10000,
+    currency: 'USD',
+    milestones: [
+      { title: 'Start', amount: 3000 },
+      { title: 'Mid', amount: 3500 },
+      { title: 'Complete', amount: 3500 }
+    ]
+  })
+})
+
+// Fund the escrow
+await fetch(`/api/escrow/${deal.id}/fund`, {
+  method: 'POST',
+  headers: { 'Authorization': `Bearer ${token}` }
+})
+
+// Release milestone
+await fetch(`/api/escrow/${deal.id}/milestones/${mid}/complete`, {
+  method: 'POST',
+  headers: { 'Authorization': `Bearer ${token}` }
+})
+```
+
+## Handling disputes
+
+If a disagreement occurs:
+
+### Raising a dispute
+
+1. Open the escrow deal
+2. Click **Raise Dispute**
+3. Provide reason and evidence
+4. Submit
+
+### Resolution process
+
+1. Both parties submit statements
+2. Mediation begins (48-72 hours)
+3. Resolution proposed
+4. Both parties accept or escalate
+
+### Outcomes
+
+| Outcome | Action |
+|---------|--------|
+| Seller wins | Funds released to seller |
+| Buyer wins | Funds returned to buyer |
+| Split | Funds divided per ruling |
+
+## Deal statuses
+
+| Status | Description |
+|--------|-------------|
+| `pending` | Created, awaiting approval |
+| `funded` | Funds deposited |
+| `in_progress` | Milestones being completed |
+| `completed` | All milestones done |
+| `disputed` | Under dispute |
+| `cancelled` | Deal cancelled |
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Counterparty not found | Verify email address |
+| Funding failed | Check payment method |
+| Milestone stuck | Contact counterparty |
+| Dispute unresolved | Escalate to support |
+
+## Best practices
+
+1. **Define clear milestones** - Specific deliverables
+2. **Set realistic deadlines** - Account for delays
+3. **Document everything** - Screenshots, messages
+4. **Communicate proactively** - Update on progress
+
+## Next steps
+
+- [Escrow concepts](/concepts/escrow)
+- [Create a listing](/guides/create-listing)
+- [Launch a campaign](/guides/launch-campaign)

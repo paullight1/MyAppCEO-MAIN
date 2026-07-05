@@ -1,0 +1,89 @@
+---
+title: Campaigns
+description: Investment campaigns for raising capital
+---
+
+# Campaigns
+
+Campaigns allow you to raise capital by selling stakes in your app.
+
+## What is a Campaign
+
+A Campaign is an investment offering where multiple investors can purchase stakes in your app.
+
+## When to use
+
+- Raise growth capital without full sale
+- Build a community of investor-supporters
+- Maintain ownership while getting funding
+
+## Campaign properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | uuid | Unique identifier |
+| `app_id` | uuid | Linked app ID |
+| `title` | string | Campaign title |
+| `goal_amount` | number | Funding target (USD) |
+| `min_investment` | number | Minimum investment (USD) |
+| `max_stake` | number | Maximum total stake % |
+| `start_date` | date | Campaign start |
+| `end_date` | date | Campaign deadline |
+| `status` | enum | `draft`, `active`, `funded`, `failed` |
+
+## Investment tiers
+
+Define tiered investment options:
+
+| Tier | Min Amount | Benefits |
+|------|------------|----------|
+| Bronze | $100 | Basic stake |
+| Silver | $500 | Stake + updates |
+| Gold | $1,000 | Stake + voting rights |
+
+## Campaign lifecycle
+
+```
+draft → active → funded
+         ↓
+       failed (if goal not met)
+```
+
+### Creating a campaign
+
+1. Navigate to `/campaigns/new`
+2. Select the app to fund
+3. Set funding goal and deadline
+4. Define investment tiers
+5. Add campaign details
+6. Publish
+
+### Campaign success criteria
+
+Campaigns succeed when:
+- Funding goal reached by deadline
+- Minimum investor count met
+
+If failed, all investments are refunded.
+
+## Investor returns
+
+Investors receive:
+- Monthly/quarterly ROI based on stake
+- Access to app performance metrics
+- Voting rights (if applicable)
+
+## Related concepts
+
+- [Apps](/concepts/apps) - Apps being funded
+- [Investments](/concepts/investments) - Investor perspective
+- [Escrow](/concepts/escrow) - Secure fund holding
+
+## API
+
+```http
+GET /campaigns
+GET /campaigns/:id
+POST /campaigns
+POST /campaigns/:id/invest
+```

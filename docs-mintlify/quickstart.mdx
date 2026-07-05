@@ -1,0 +1,68 @@
+---
+title: Quickstart
+description: Get started with MyAppCEO in 5 minutes
+---
+
+# Quickstart
+
+Get your first listing created in 5 minutes.
+
+## Prerequisites
+
+- Node.js 18+
+- Supabase account
+- Stripe account (for payments)
+
+## 1. Install and run
+
+```bash
+cd apps/MyAppCEO
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173).
+
+## 2. Create an account
+
+1. Navigate to `/auth`
+2. Sign up with email or social login
+3. Verify your email
+
+## 3. Create your first listing
+
+Navigate to `/listings/new` or click **Create Listing** from the dashboard.
+
+```typescript
+// Minimum required fields
+{
+  title: "My SaaS App",
+  description: "Description of your app",
+  price: 5000,
+  category: "saas"
+}
+```
+
+## 4. Publish your listing
+
+1. Fill in the required fields
+2. Add images and details
+3. Click **Publish**
+
+Your listing is now live at `/marketplace`.
+
+## 5. Launch a campaign (optional)
+
+To raise investment for your app:
+
+1. Navigate to `/campaigns/new`
+2. Set your funding goal
+3. Define investment tiers
+4. Publish the campaign
+
+## Next steps
+
+- [Understand Apps](/concepts/apps)
+- [Create Listings](/guides/create-listing)
+- [Launch Campaigns](/guides/launch-campaign)
+- [API Reference](/api-reference/introduction)
