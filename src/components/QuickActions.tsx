@@ -11,7 +11,7 @@ const ACTIONS = [
 
 export const QuickActions: React.FC = () => {
     return (
-        <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
+        <div className="bg-card rounded-2xl border border-border p-6">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="font-bold text-foreground">Quick Actions</h3>
                 <Link to="/dashboard" className="text-sm font-semibold text-primary hover:text-primary/80 flex items-center gap-1 transition-colors">
@@ -30,7 +30,7 @@ export const QuickActions: React.FC = () => {
                         >
                             <div className="flex items-center gap-3">
                                 <div
-                                    className={`w-10 h-10 rounded-xl ${action.color} flex items-center justify-center text-white shadow-sm group-hover:scale-110 transition-transform`}
+                                    className={`w-10 h-10 rounded-xl ${action.color} flex items-center justify-center text-white group-hover:scale-110 transition-transform`}
                                 >
                                     <Icon size={18} />
                                 </div>

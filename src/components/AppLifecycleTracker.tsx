@@ -82,7 +82,7 @@ export const AppLifecycleTracker: React.FC<AppLifecycleTrackerProps> = ({
     }
 
     return (
-        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
             <div className="flex flex-col gap-3 border-b border-border bg-muted/40 p-6 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h3 className="text-lg font-bold text-foreground">App lifecycle</h3>

@@ -148,7 +148,7 @@ export const InvestPage: React.FC = () => {
                             {valueProps.map((item) => (
                                 <div
                                     key={item.title}
-                                    className="space-y-5 rounded-2xl border border-border bg-card p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                                    className="space-y-5 rounded-2xl border border-border bg-card p-8 transition-all duration-300"
                                 >
                                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                                         <item.icon size={24} className="text-primary" />

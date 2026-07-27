@@ -471,7 +471,7 @@ export const SettingsPage: React.FC = () => {
 
                 <div className="flex flex-col gap-6 md:flex-row">
                     <aside className="w-full shrink-0 md:w-64">
-                        <nav className="rounded-2xl border border-border bg-card p-3 shadow-sm" aria-label="Settings sections">
+                        <nav className="rounded-2xl border border-border bg-card p-3" aria-label="Settings sections">
                             {SETTINGS_SECTIONS.map((section) => {
                                 const Icon = section.icon;
                                 const isActive = activeSection === section.id;
@@ -505,7 +505,7 @@ export const SettingsPage: React.FC = () => {
 
                     <main className="min-w-0 flex-1">
                         {activeSection === 'profile' && (
-                            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                            <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                                 <SectionHeader title="Profile information" description="Server-synced account identity used across protected workspaces." icon={User} />
                                 <div className="mt-6 space-y-6">
                                     <div className="flex items-center gap-5">
@@ -513,10 +513,10 @@ export const SettingsPage: React.FC = () => {
                                             <img
                                                 src={localProfile.avatarUrl}
                                                 alt="Your avatar"
-                                                className="h-20 w-20 rounded-2xl object-cover shadow-lg"
+                                                className="h-20 w-20 rounded-2xl object-cover"
                                             />
                                         ) : (
-                                            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-2xl font-bold text-white shadow-lg">
+                                            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-2xl font-bold text-white">
                                                 {(localProfile.name || localProfile.email || 'U').slice(0, 1).toUpperCase()}
                                             </div>
                                         )}
@@ -564,7 +564,7 @@ export const SettingsPage: React.FC = () => {
                         )}
 
                         {activeSection === 'notifications' && (
-                            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                            <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                                 <SectionHeader title="Notification preferences" description="Synced through the notifications preference flow, with local fallback when the backend table is unavailable." icon={Bell} />
                                 <div className="mt-6 space-y-8">
                                     {NOTIFICATION_GROUPS.map((group) => {
@@ -591,7 +591,7 @@ export const SettingsPage: React.FC = () => {
                                         );
                                     })}
 
-                                    <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 text-foreground shadow-sm">
+                                    <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 text-foreground">
                                         <div className="flex items-center gap-2">
                                             <Megaphone size={18} className="text-primary" />
                                             <p className="text-sm font-semibold">Marketing notifications</p>
@@ -610,7 +610,7 @@ export const SettingsPage: React.FC = () => {
                                                         className={cn(
                                                             'rounded-2xl border p-4 text-left transition active:scale-[0.98]',
                                                             selected
-                                                                ? 'border-primary bg-card shadow-sm'
+                                                                ? 'border-primary bg-card'
                                                                 : 'border-border bg-card/60 hover:border-primary/40 hover:bg-card',
                                                         )}
                                                     >
@@ -636,7 +636,7 @@ export const SettingsPage: React.FC = () => {
                         )}
 
                         {activeSection === 'verification' && (
-                            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                            <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                                 <SectionHeader title="Identity verification" description="KYC status is required before payouts and higher-trust marketplace actions." icon={ShieldCheck} />
                                 <div className="mt-6 space-y-6">
                                     <div className="flex flex-col gap-4 rounded-2xl border border-border bg-muted p-5 sm:flex-row sm:items-center sm:justify-between">
@@ -665,7 +665,7 @@ export const SettingsPage: React.FC = () => {
                         )}
 
                         {activeSection === 'security' && (
-                            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                            <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                                 <SectionHeader title="Security settings" description="Password changes go through Supabase Auth. MFA controls need provider-level wiring before launch." icon={Shield} />
                                 <div className="mt-6 space-y-6">
                                     <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-5">
@@ -698,7 +698,7 @@ export const SettingsPage: React.FC = () => {
                         )}
 
                         {activeSection === 'api' && (
-                            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                            <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                                 <SectionHeader title="API keys" description="Developer keys are managed in the dedicated portal so scope, rotation, revocation, and usage stats stay in one place." icon={Key} />
                                 <div className="mt-6 rounded-2xl bg-muted p-5">
                                     <p className="text-sm leading-6 text-muted-foreground">
@@ -712,7 +712,7 @@ export const SettingsPage: React.FC = () => {
                         )}
 
                         {activeSection === 'billing' && (
-                            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                            <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                                 <SectionHeader title="Billing and subscription" description="Billing portal integration is a linked-service dependency for production." icon={CreditCard} />
                                 <div className="mt-6 space-y-5">
                                     <div className="rounded-2xl bg-primary p-6 text-primary-foreground">
@@ -729,7 +729,7 @@ export const SettingsPage: React.FC = () => {
                         )}
 
                         {activeSection === 'payments' && (
-                            <section className="space-y-8 rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                            <section className="space-y-8 rounded-2xl border border-border bg-card p-6 sm:p-8">
                                 <SectionHeader title="Payout settings" description="Server-backed payout onboarding and account status." icon={CreditCard} />
 
                                 {searchParams.get('success') === 'true' && (
@@ -781,7 +781,7 @@ export const SettingsPage: React.FC = () => {
                         )}
 
                         {activeSection === 'appearance' && (
-                            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+                            <section className="rounded-2xl border border-border bg-card p-6 sm:p-8">
                                 <SectionHeader
                                     title="Appearance"
                                     description="Theme changes update the shared app shell. Language, density, and motion stay local to this browser."

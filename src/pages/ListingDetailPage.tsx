@@ -398,7 +398,7 @@ export const ListingDetailPage: React.FC = () => {
 
                         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                             <div className="space-y-8 lg:col-span-2">
-                                <div className="rounded-2xl border border-border bg-card p-8 shadow-sm md:p-12">
+                                <div className="rounded-2xl border border-border bg-card p-8 md:p-12">
                                     {activeTab === 'overview' && (
                                         <div className="space-y-10">
                                             <div>
@@ -556,7 +556,7 @@ export const ListingDetailPage: React.FC = () => {
 
                             <div className="space-y-8">
                                 {(validAppStoreUrl || validPlayStoreUrl) && (
-                                    <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+                                    <div className="rounded-2xl border border-border bg-card p-8">
                                         <h3 className="mb-6 flex items-center gap-2 text-[12px] uppercase tracking-wide text-foreground">
                                             <Store size={14} className="text-primary" /> Store Source
                                         </h3>
@@ -575,7 +575,7 @@ export const ListingDetailPage: React.FC = () => {
                                     </div>
                                 )}
 
-                                <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+                                <div className="rounded-2xl border border-border bg-card p-8">
                                     <h3 className="mb-8 text-[12px] uppercase tracking-wide text-foreground">Public Financial Snapshot</h3>
                                     <div className="flex items-end justify-between border-b border-border pb-6">
                                         <span className="text-[12px] uppercase tracking-wide text-muted-foreground">Monthly Revenue</span>
@@ -597,7 +597,7 @@ export const ListingDetailPage: React.FC = () => {
                                     )}
                                 </div>
 
-                                <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+                                <div className="rounded-2xl border border-border bg-card p-8">
                                     <h3 className="mb-6 text-[12px] uppercase tracking-wide text-foreground">Data Room Access</h3>
                                     <div className="space-y-4">
                                         {validDocumentationUrl ? (

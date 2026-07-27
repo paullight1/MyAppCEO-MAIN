@@ -446,7 +446,7 @@ export const FinancesPage: React.FC = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.08 }}
-                                className="rounded-2xl border border-border bg-card p-6 shadow-sm"
+                                className="rounded-2xl border border-border bg-card p-6"
                             >
                                 <div className="mb-4 flex items-center justify-between">
                                     <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">

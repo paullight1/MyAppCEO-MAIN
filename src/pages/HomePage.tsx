@@ -61,7 +61,7 @@ export const HomePage: React.FC = () => {
                             </Link>
                             <button
                                 onClick={handleListApp}
-                                className="inline-flex min-h-12 min-w-[174px] items-center justify-center gap-2 rounded-full border border-white/70 bg-white px-6 py-3 text-[17px] font-semibold text-[#111113] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_10px_26px_rgba(0,0,0,0.22)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[1px] hover:bg-[#f5f5f7] active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/24"
+                                className="inline-flex min-h-12 min-w-[174px] items-center justify-center gap-2 rounded-full border border-white/70 bg-white px-6 py-3 text-[17px] font-semibold text-[#111113] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[#f5f5f7] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/24"
                             >
                                 <PlusCircle size={18} /> List Your App
                             </button>
@@ -130,7 +130,7 @@ export const HomePage: React.FC = () => {
                                     <Link
                                         key={listing.id}
                                         to={`/listings/${listing.id}`}
-                                        className="block bg-white dark:bg-[#1d1d1f] rounded-[8px] overflow-hidden group transition-all duration-300 hover:shadow-[0_3px_30px_rgba(0,0,0,0.22)] dark:hover:shadow-[0_3px_30px_rgba(0,0,0,0.5)]"
+                                        className="block bg-white dark:bg-[#1d1d1f] border border-border rounded-[8px] overflow-hidden group transition-all duration-300"
                                     >
                                         <div className="aspect-[16/10] bg-[#f5f5f7] dark:bg-[#000000] overflow-hidden relative transition-colors duration-300">
                                             <img
@@ -207,7 +207,7 @@ export const HomePage: React.FC = () => {
                         <div className="flex justify-center gap-4 pt-6">
                             <Link
                                 to="/invest"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-[#0071e3] text-white text-[17px] font-normal rounded-full transition-all hover:bg-[#0077ed] active:bg-[#006edb] shadow-lg shadow-[#0071e3]/20"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-[#0071e3] text-white text-[17px] font-normal rounded-full transition-all hover:bg-[#0077ed] active:bg-[#006edb]"
                             >
                                 Learn More <ChevronRight size={16} />
                             </Link>

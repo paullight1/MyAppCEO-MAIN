@@ -582,7 +582,7 @@ export const LegalPage: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-3">
                             <span className="text-sm text-[#1d1d1f]/40 dark:text-white/40 font-bold">{licenses.length} licenses</span>
-                            <div className="flex rounded-xl bg-white dark:bg-[#1e1e20] p-1 shadow-sm">
+                            <div className="flex rounded-xl bg-white dark:bg-[#1e1e20] border border-border p-1">
                                 <button
                                     type="button"
                                     onClick={() => setViewMode('grid')}
@@ -775,7 +775,7 @@ const LicenseCard: React.FC<LicenseCardProps> = ({ license, viewMode, onApply })
                                     href={validOfficialRequirementsUrl}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-[#0071e3] shadow-sm dark:bg-[#151618]"
+                                    className="inline-flex items-center gap-1 rounded-full bg-white border border-border px-2.5 py-1 text-[10px] font-bold text-[#0071e3] dark:bg-[#151618]"
                                 >
                                     <ExternalLink size={10} />
                                     Open official page
@@ -848,7 +848,7 @@ const LicenseCard: React.FC<LicenseCardProps> = ({ license, viewMode, onApply })
         return (
             <motion.div
                 layout
-                className="bg-white dark:bg-[#1e1e20] rounded-2xl shadow-[0_12px_28px_rgba(15,23,42,0.06)] transition-all active:scale-[0.99] hover:bg-[#f8fafc] dark:hover:bg-[#242427]"
+                className="bg-white dark:bg-[#1e1e20] border border-border rounded-2xl transition-all active:scale-[0.99] hover:bg-[#f8fafc] dark:hover:bg-[#242427]"
             >
                 <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
                     <OrgLogo
@@ -893,7 +893,7 @@ const LicenseCard: React.FC<LicenseCardProps> = ({ license, viewMode, onApply })
     return (
         <motion.div
             layout
-            className="bg-white dark:bg-[#1e1e20] rounded-2xl overflow-hidden shadow-[0_12px_28px_rgba(15,23,42,0.06)] transition-all active:scale-[0.99] hover:bg-[#f8fafc] dark:hover:bg-[#242427]"
+            className="bg-white dark:bg-[#1e1e20] border border-border rounded-2xl overflow-hidden transition-all active:scale-[0.99] hover:bg-[#f8fafc] dark:hover:bg-[#242427]"
         >
             <div className="p-4">
                 <div className="flex items-start justify-between gap-3">

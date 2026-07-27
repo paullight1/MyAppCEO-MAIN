@@ -82,7 +82,7 @@ export function EmptyState({
     return (
         <section
             className={cn(
-                'rounded-2xl border border-dashed border-border bg-card text-center shadow-sm',
+                'rounded-2xl border border-dashed border-border bg-card text-center',
                 sizeClasses[size],
                 className
             )}
@@ -158,7 +158,7 @@ export function ErrorState({
 
     return (
         <section
-            className={cn('rounded-2xl border bg-card p-8 text-center shadow-sm', severity === 'error' ? 'border-error/30' : 'border-warning/40', className)}
+            className={cn('rounded-2xl border bg-card p-8 text-center', severity === 'error' ? 'border-error/30' : 'border-warning/40', className)}
             role="alert"
             {...props}
         >

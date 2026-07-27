@@ -103,13 +103,13 @@ export const CapTablePage: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Chart */}
-            <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
+            <div className="bg-card rounded-2xl border border-border p-6">
               <h3 className="font-bold text-foreground mb-4">Ownership Distribution</h3>
               <CapTableChart data={chartData} />
             </div>
 
             {/* Table */}
-            <div className="lg:col-span-2 bg-card rounded-2xl border border-border shadow-sm p-6">
+            <div className="lg:col-span-2 bg-card rounded-2xl border border-border p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold text-foreground">Stakeholders</h3>
                 <div className="flex gap-2">

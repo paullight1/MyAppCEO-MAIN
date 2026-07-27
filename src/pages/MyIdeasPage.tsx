@@ -210,7 +210,7 @@ export const MyIdeasPage: React.FC = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.05 }}
-                                    className="group bg-card rounded-2xl border border-border shadow-sm hover:shadow-md transition-all overflow-hidden"
+                                    className="group bg-card rounded-2xl border border-border transition-all overflow-hidden"
                                 >
                                     <Link
                                         to={`/ideas/${idea.id}`}

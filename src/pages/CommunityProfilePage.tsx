@@ -82,7 +82,7 @@ export const CommunityProfilePage: React.FC = () => {
 
                 <div className="bg-card border border-border rounded-2xl p-8">
                     <div className="flex flex-col md:flex-row items-center gap-6">
-                        <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white font-bold text-4xl shadow-lg">
+                        <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white font-bold text-4xl">
                             {stats.user?.fullName?.[0] || '?'}
                         </div>
                         <div className="flex-1 text-center md:text-left">

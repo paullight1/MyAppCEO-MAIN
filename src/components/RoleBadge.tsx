@@ -1,5 +1,5 @@
 import React from 'react';
-import { Crown, UsersRound, Briefcase, Clock } from 'lucide-react';
+import { Crown, UsersRound, Briefcase, Clock, Star, Lightbulb, GraduationCap } from 'lucide-react';
 
 const ROLE_CONFIG: Record<string, { label: string; icon: React.ReactNode; bg: string; text: string; border: string }> = {
   owner: {
@@ -8,6 +8,27 @@ const ROLE_CONFIG: Record<string, { label: string; icon: React.ReactNode; bg: st
     bg: 'bg-amber-500/10 dark:bg-amber-500/15',
     text: 'text-amber-700 dark:text-amber-400',
     border: 'border-amber-500/20',
+  },
+  ceo: {
+    label: 'CEO',
+    icon: <Star size={12} />,
+    bg: 'bg-purple-500/10 dark:bg-purple-500/15',
+    text: 'text-purple-700 dark:text-purple-400',
+    border: 'border-purple-500/20',
+  },
+  early_employee: {
+    label: 'Early Employee',
+    icon: <Lightbulb size={12} />,
+    bg: 'bg-cyan-500/10 dark:bg-cyan-500/15',
+    text: 'text-cyan-700 dark:text-cyan-400',
+    border: 'border-cyan-500/20',
+  },
+  advisor: {
+    label: 'Advisor',
+    icon: <GraduationCap size={12} />,
+    bg: 'bg-orange-500/10 dark:bg-orange-500/15',
+    text: 'text-orange-700 dark:text-orange-400',
+    border: 'border-orange-500/20',
   },
   cofounder: {
     label: 'Co-Founder',

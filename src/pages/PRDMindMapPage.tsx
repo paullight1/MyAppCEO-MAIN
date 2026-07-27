@@ -148,7 +148,7 @@ export function PRDMindMapPage() {
                         onClick={handleGenerateDesigns}
                         disabled={isGenerating || isLoadingPRD}
                         className="flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-purple-500 to-pink-500 
-                                   text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all shadow-md
+                                   text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all
                                    disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isGenerating ? (
@@ -162,7 +162,7 @@ export function PRDMindMapPage() {
                         <button
                             onClick={handleCreateBuildPlan}
                             disabled={isPipelineMutating || isLoadingPRD}
-                            className="flex items-center gap-2 px-4 py-2 text-sm bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-lg hover:opacity-90 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center gap-2 px-4 py-2 text-sm bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isPipelineMutating ? (
                                 <Loader2 size={16} className="animate-spin" />

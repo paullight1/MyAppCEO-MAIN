@@ -43,7 +43,7 @@ export const StoreAppCard: React.FC<StoreAppCardProps> = ({
   return (
     <Link
       to={`/store-apps/${app.platform}/${app.id}`}
-      className="group block overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:border-primary/30 hover:shadow-lg active:scale-[0.985] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group block overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:border-primary/30 active:scale-[0.985] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <div
         className={`relative overflow-hidden bg-muted ${compact ? "aspect-[16/10]" : "aspect-[16/11]"}`}

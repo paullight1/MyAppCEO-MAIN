@@ -250,7 +250,7 @@ export const CampaignInvestPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-card max-w-md w-full border border-border rounded-2xl p-8 text-center shadow-xl shadow-black/5"
+            className="bg-card max-w-md w-full border border-border rounded-2xl p-8 text-center"
           >
             <div className="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <AlertCircle className="w-8 h-8 text-error" />
@@ -263,7 +263,7 @@ export const CampaignInvestPage: React.FC = () => {
             </p>
             <button
               onClick={() => navigate("/campaigns")}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-accent text-white rounded-xl hover:bg-accent/90 font-bold transition-all shadow-lg hover:shadow-accent/40"
+              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-accent text-white rounded-xl hover:bg-accent/90 font-bold transition-all"
             >
               <ArrowLeft className="w-5 h-5" /> Back to Campaigns
             </button>
@@ -298,7 +298,7 @@ export const CampaignInvestPage: React.FC = () => {
               key="processing"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-card rounded-2xl border border-border p-8 md:p-12 text-center max-w-xl mx-auto shadow-2xl shadow-black/5 min-h-[60vh] flex flex-col items-center justify-center"
+              className="bg-card rounded-2xl border border-border p-8 md:p-12 text-center max-w-xl mx-auto min-h-[60vh] flex flex-col items-center justify-center"
               role="status"
               aria-live="polite"
             >
@@ -325,7 +325,7 @@ export const CampaignInvestPage: React.FC = () => {
               key="success"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-card rounded-2xl border border-border p-8 md:p-12 text-center max-w-2xl mx-auto shadow-2xl shadow-emerald-500/5 relative overflow-hidden"
+              className="bg-card rounded-2xl border border-border p-8 md:p-12 text-center max-w-2xl mx-auto relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl opacity-50 pointer-events-none" />
               <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-accent/10 rounded-full blur-3xl opacity-50 pointer-events-none" />
@@ -335,7 +335,7 @@ export const CampaignInvestPage: React.FC = () => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", damping: 15, delay: 0.1 }}
-                  className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-emerald-500/30"
+                  className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-8"
                 >
                   <CheckCircle2 className="w-12 h-12 text-white" />
                 </motion.div>
@@ -380,7 +380,7 @@ export const CampaignInvestPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
                     to="/my-investments"
-                    className="flex-1 px-6 py-4 bg-accent text-white rounded-xl hover:bg-accent/90 font-bold shadow-lg hover:shadow-accent/40 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 px-6 py-4 bg-accent text-white rounded-xl hover:bg-accent/90 font-bold transition-all flex items-center justify-center gap-2"
                   >
                     <TrendingUp className="w-5 h-5" /> View My Investments
                   </Link>
@@ -401,7 +401,7 @@ export const CampaignInvestPage: React.FC = () => {
               className="grid grid-cols-1 lg:grid-cols-12 gap-8"
             >
               <div className="lg:col-span-7 space-y-6">
-                <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 shadow-sm">
+                <div className="bg-card rounded-2xl border border-border p-6 sm:p-8">
                   <div className="flex items-start gap-4 mb-8">
                     {campaign.coverImageUrl ? (
                       <img
@@ -501,7 +501,7 @@ export const CampaignInvestPage: React.FC = () => {
                               Math.max(campaign.minInvestment, current - sliderStep).toString(),
                             );
                           }}
-                          className="p-3 bg-card shadow-sm border border-border rounded-xl hover:border-accent/40 text-foreground hover:text-accent transition-all"
+                          className="p-3 bg-card border border-border rounded-xl hover:border-accent/40 text-foreground hover:text-accent transition-all"
                         >
                           <Minus className="w-5 h-5" />
                         </button>
@@ -525,7 +525,7 @@ export const CampaignInvestPage: React.FC = () => {
                             const current = parseFloat(amount) || campaign.minInvestment;
                             setAmount(Math.min(sliderMax, current + sliderStep).toString());
                           }}
-                          className="p-3 bg-card shadow-sm border border-border rounded-xl hover:border-accent/40 text-foreground hover:text-accent transition-all"
+                          className="p-3 bg-card border border-border rounded-xl hover:border-accent/40 text-foreground hover:text-accent transition-all"
                         >
                           <Plus className="w-5 h-5" />
                         </button>
@@ -539,7 +539,7 @@ export const CampaignInvestPage: React.FC = () => {
                             onClick={() => setAmount(preset.toString())}
                             className={`flex-1 min-w-[80px] py-2.5 rounded-xl text-sm font-bold transition-all ${
                               parseFloat(amount) === preset
-                                ? "bg-accent text-white shadow-md shadow-accent/20"
+                                ? "bg-accent text-white"
                                 : "bg-card border border-border text-foreground hover:border-accent/40 hover:bg-accent/5"
                             }`}
                           >
@@ -623,7 +623,7 @@ export const CampaignInvestPage: React.FC = () => {
               </div>
 
               <div className="lg:col-span-5 space-y-6">
-                <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 shadow-sm sticky top-24">
+                <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 sticky top-24">
                   <h3 className="font-bold text-xl text-foreground mb-6 flex items-center gap-2">
                     <CreditCard className="w-5 h-5 text-accent" /> Summary
                   </h3>

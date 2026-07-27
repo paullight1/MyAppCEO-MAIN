@@ -127,8 +127,8 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({
     return (
         <article
             className={cn(
-                'group relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300',
-                'hover:-translate-y-1 hover:shadow-xl focus-within:ring-2 focus-within:ring-ring',
+                'group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300',
+                'focus-within:ring-2 focus-within:ring-ring',
                 variant === 'grid' ? 'flex h-full flex-col' : 'flex flex-col sm:flex-row',
                 className,
             )}

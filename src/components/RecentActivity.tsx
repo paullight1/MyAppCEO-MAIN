@@ -26,7 +26,7 @@ const ICON_MAP = {
 
 export const RecentActivity: React.FC = () => {
     return (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="font-bold text-[#1a1a2e]">Recent Activity</h3>
                 <button className="text-sm font-semibold text-[#e94560] hover:text-[#d63d56] flex items-center gap-1 transition-colors">

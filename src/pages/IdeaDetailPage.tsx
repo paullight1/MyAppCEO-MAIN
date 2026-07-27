@@ -315,7 +315,7 @@ export const IdeaDetailPage: React.FC = () => {
                     Back to Ideas
                 </button>
 
-                <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+                <div className="bg-card rounded-2xl border border-border overflow-hidden">
                     <div className="p-6 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                             <div>

@@ -1058,7 +1058,7 @@ export const AdminReviewQueuePage: React.FC = () => {
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {filteredItems.map(item => (
-                            <div key={item.id} className="bg-card rounded-[2rem] border border-border shadow-sm overflow-hidden">
+                            <div key={item.id} className="bg-card rounded-[2rem] border border-border overflow-hidden">
                                 <div className="p-6 border-b border-border">
                                     <div className="flex items-start gap-4">
                                         <div className="w-16 h-16 rounded-2xl bg-muted overflow-hidden shrink-0">

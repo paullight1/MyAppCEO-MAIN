@@ -9,7 +9,7 @@ export interface AppMember {
   id: string;
   app_id: string;
   user_id: string;
-  role: 'owner' | 'cofounder' | 'shareholder' | 'prospective' | 'admin' | 'support';
+  role: 'owner' | 'ceo' | 'cofounder' | 'shareholder' | 'prospective' | 'admin' | 'support';
   equity_pct: number;
   shares_owned: number;
   status: 'active' | 'pending' | 'removed';
@@ -25,7 +25,7 @@ export interface AppMember {
 }
 
 export interface AppRole {
-  role: 'owner' | 'cofounder' | 'shareholder' | 'prospective' | 'admin' | 'support';
+  role: 'owner' | 'ceo' | 'cofounder' | 'shareholder' | 'prospective' | 'admin' | 'support';
   status: 'active' | 'pending' | 'removed';
   permissions: Record<string, boolean>;
   canAccess: (feature: string) => boolean;
@@ -71,6 +71,24 @@ const ROLE_PERMISSIONS: Record<string, Record<string, boolean>> = {
     export_data: true,
     manage_shareholder_requests: true,
     transfer_ownership: true,
+  },
+  ceo: {
+    view_analytics: true,
+    view_cap_table: true,
+    manage_team: true,
+    upload_documents: true,
+    view_documents: true,
+    create_shareholder_offer: true,
+    apply_as_shareholder: false,
+    manage_finances: true,
+    delete_app: false,
+    change_equity_splits: false,
+    post_updates: true,
+    view_legal_agreements: true,
+    vote_on_decisions: true,
+    export_data: true,
+    manage_shareholder_requests: true,
+    transfer_ownership: false,
   },
   cofounder: {
     view_analytics: true,
@@ -274,7 +292,7 @@ export const useAppRole = () => {
 
 function normalizeRole(role: string | null | undefined): AppRole['role'] {
   if (role === 'co_founder') return 'cofounder';
-  if (role === 'owner' || role === 'cofounder' || role === 'shareholder' || role === 'prospective' || role === 'admin' || role === 'support') return role;
+  if (role === 'owner' || role === 'ceo' || role === 'cofounder' || role === 'shareholder' || role === 'prospective' || role === 'admin' || role === 'support') return role;
   return 'prospective';
 }
 

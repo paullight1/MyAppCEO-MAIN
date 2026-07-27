@@ -46,9 +46,9 @@ interface CampaignForm {
 }
 
 const INPUT_CLASS =
-  "w-full px-4 py-3.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all shadow-sm";
+  "w-full px-4 py-3.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all";
 const INPUT_ERROR_CLASS =
-  "w-full px-4 py-3.5 bg-card border border-error rounded-xl focus:ring-2 focus:ring-error/20 focus:border-error outline-none font-medium transition-all shadow-sm";
+  "w-full px-4 py-3.5 bg-card border border-error rounded-xl focus:ring-2 focus:ring-error/20 focus:border-error outline-none font-medium transition-all";
 
 const isValidUrl = (value: string) => {
   try {
@@ -341,7 +341,7 @@ export const CreateCampaignPage: React.FC = () => {
         </button>
 
         {appContextLoading ? (
-          <div className="bg-card/80 backdrop-blur-2xl rounded-2xl border border-border/60 shadow-2xl shadow-black/5 p-8 sm:p-10 relative z-10 text-center">
+          <div className="bg-card/80 backdrop-blur-2xl rounded-2xl border border-border/60 p-8 sm:p-10 relative z-10 text-center">
             <Loader2 className="w-8 h-8 animate-spin text-accent mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-foreground">
               Checking App Access
@@ -351,7 +351,7 @@ export const CreateCampaignPage: React.FC = () => {
             </p>
           </div>
         ) : appContextError ? (
-          <div className="bg-card/80 backdrop-blur-2xl rounded-2xl border border-error/20 shadow-2xl shadow-black/5 p-8 sm:p-10 relative z-10 text-center">
+          <div className="bg-card/80 backdrop-blur-2xl rounded-2xl border border-error/20 p-8 sm:p-10 relative z-10 text-center">
             <div className="w-16 h-16 bg-error/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <AlertCircle className="w-8 h-8 text-error" />
             </div>
@@ -378,11 +378,11 @@ export const CreateCampaignPage: React.FC = () => {
             </div>
           </div>
         ) : (
-        <div className="bg-card/80 backdrop-blur-2xl rounded-2xl border border-border/60 shadow-2xl shadow-black/5 p-8 sm:p-10 relative z-10">
+        <div className="bg-card/80 backdrop-blur-2xl rounded-2xl border border-border/60 p-8 sm:p-10 relative z-10">
           {step < 4 ? (
             <>
               <div className="text-center mb-10">
-                <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/20">
+                <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
                   <Rocket className="w-10 h-10 text-white" />
                 </div>
                 <h1 className="text-3xl font-bold text-foreground tracking-tight">
@@ -404,9 +404,9 @@ export const CreateCampaignPage: React.FC = () => {
                       <div
                         className={`w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold transition-all duration-300 ${
                           s.num < step
-                            ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
+                            ? "bg-emerald-500 text-white"
                             : s.num === step
-                              ? "bg-accent text-white shadow-lg shadow-accent/30 scale-110"
+                              ? "bg-accent text-white scale-110"
                               : "bg-muted/80 text-muted-foreground border border-border/50"
                         }`}
                       >
@@ -478,7 +478,7 @@ export const CreateCampaignPage: React.FC = () => {
 
                     {linkedApp && (
                       <div className="p-5 bg-sky-50 dark:bg-sky-950/20 rounded-2xl border border-sky-100 dark:border-sky-900/40 flex items-start gap-4">
-                        <div className="w-12 h-12 bg-sky-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
+                        <div className="w-12 h-12 bg-sky-500 rounded-2xl flex items-center justify-center text-white">
                           <LayoutDashboard className="w-6 h-6" />
                         </div>
                         <div>
@@ -727,7 +727,7 @@ export const CreateCampaignPage: React.FC = () => {
                             aria-pressed={formData.fundingType === "split"}
                             className={`p-5 rounded-2xl border-2 text-left transition-all ${
                               formData.fundingType === "split"
-                                ? "border-accent bg-accent/5 shadow-md shadow-accent/10"
+                                ? "border-accent bg-accent/5"
                                 : "border-border bg-card hover:border-accent/40"
                             }`}
                           >
@@ -747,7 +747,7 @@ export const CreateCampaignPage: React.FC = () => {
                             aria-pressed={formData.fundingType === "pay_once"}
                             className={`p-5 rounded-2xl border-2 text-left transition-all ${
                               formData.fundingType === "pay_once"
-                                ? "border-accent bg-accent/5 shadow-md shadow-accent/10"
+                                ? "border-accent bg-accent/5"
                                 : "border-border bg-card hover:border-accent/40"
                             }`}
                           >
@@ -781,7 +781,7 @@ export const CreateCampaignPage: React.FC = () => {
                     </div>
 
                     {/* Real preview */}
-                    <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+                    <div className="rounded-2xl border border-border bg-card overflow-hidden">
                       {formData.coverImageUrl.trim() && !fieldErrors.coverImageUrl ? (
                         <img
                           src={formData.coverImageUrl}
@@ -906,7 +906,7 @@ export const CreateCampaignPage: React.FC = () => {
                     type="button"
                     onClick={handleContinue}
                     disabled={!canProceed()}
-                    className="px-8 py-3.5 bg-foreground text-background rounded-xl hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition-all shadow-md"
+                    className="px-8 py-3.5 bg-foreground text-background rounded-xl hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed font-bold transition-all"
                   >
                     Continue
                   </button>
@@ -945,7 +945,7 @@ export const CreateCampaignPage: React.FC = () => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", damping: 15, delay: 0.1 }}
-                className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-emerald-500/30"
+                className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-8"
               >
                 <CheckCircle2 className="w-12 h-12 text-white" />
               </motion.div>
@@ -960,7 +960,7 @@ export const CreateCampaignPage: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   to={`/campaigns/${createdCampaign?.id}`}
-                  className="px-8 py-4 bg-accent text-white rounded-xl flex items-center justify-center gap-2 hover:bg-accent/90 font-bold shadow-lg hover:shadow-accent/40 transition-all"
+                  className="px-8 py-4 bg-accent text-white rounded-xl flex items-center justify-center gap-2 hover:bg-accent/90 font-bold transition-all"
                 >
                   <Sparkles className="w-5 h-5" /> Preview Campaign
                 </Link>

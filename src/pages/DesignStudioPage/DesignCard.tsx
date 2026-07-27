@@ -62,7 +62,7 @@ export const DesignCard: React.FC<DesignCardProps> = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={cn(
-                    'bg-card border border-border rounded-2xl overflow-hidden transition-all hover:shadow-lg hover:border-primary/20',
+                    'bg-card border border-border rounded-2xl overflow-hidden transition-all hover:border-primary/20',
                     node.designLoading && 'ring-2 ring-primary'
                 )}
             >

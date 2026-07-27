@@ -109,7 +109,7 @@ const StoryRailCard: React.FC<{ post: BlogPost }> = ({ post }) => {
     return (
         <Link
             to={`/blog/${post.slug}`}
-            className="group block overflow-hidden rounded-[24px] border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+            className="group block overflow-hidden rounded-[24px] border border-border bg-card p-4 transition-all duration-300 hover:border-primary/40"
         >
             <div className={`relative aspect-[16/10] overflow-hidden rounded-[18px] bg-gradient-to-br ${theme.accent}`}>
                 {post.coverImageUrl ? (
@@ -250,7 +250,7 @@ export const BlogPostPage: React.FC = () => {
                     <div className="mb-8 flex items-center justify-between gap-4">
                         <Link
                             to="/blog"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-[13px] font-semibold text-muted-foreground shadow-sm backdrop-blur transition-all hover:border-primary/40 hover:text-primary"
+                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-[13px] font-semibold text-muted-foreground backdrop-blur transition-all hover:border-primary/40 hover:text-primary"
                         >
                             <ArrowLeft size={14} /> Back to blog
                         </Link>
@@ -258,7 +258,7 @@ export const BlogPostPage: React.FC = () => {
                             type="button"
                             onClick={handleCopyLink}
                             aria-label="Copy link to this article"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-[13px] font-semibold text-muted-foreground shadow-sm backdrop-blur transition-all hover:border-primary/40 hover:text-primary"
+                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-[13px] font-semibold text-muted-foreground backdrop-blur transition-all hover:border-primary/40 hover:text-primary"
                         >
                             {copied ? <Check size={14} /> : <Copy size={14} />}
                             {copied ? 'Copied' : copyFailed ? 'Copy failed' : 'Copy link'}
@@ -266,7 +266,7 @@ export const BlogPostPage: React.FC = () => {
                     </div>
 
                     <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-                        <article className="overflow-hidden rounded-[32px] border border-border bg-card shadow-sm">
+                        <article className="overflow-hidden rounded-[32px] border border-border bg-card">
                             <div className={`relative aspect-[16/9] overflow-hidden bg-gradient-to-br ${theme.accent}`}>
                                 {post.coverImageUrl ? (
                                     <img
@@ -331,7 +331,7 @@ export const BlogPostPage: React.FC = () => {
                         </article>
 
                         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-                            <div className="rounded-[24px] border border-primary/20 bg-primary p-5 text-primary-foreground shadow-sm">
+                            <div className="rounded-[24px] border border-primary/20 bg-primary p-5 text-primary-foreground">
                                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
                                     <Sparkles size={18} />
                                 </div>
@@ -341,7 +341,7 @@ export const BlogPostPage: React.FC = () => {
                                 </p>
                             </div>
 
-                            <div className="rounded-[24px] border border-border bg-card p-5 shadow-sm">
+                            <div className="rounded-[24px] border border-border bg-card p-5">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Article details</p>
                                 <dl className="mt-4 space-y-4">
                                     <div className="flex items-center justify-between gap-4 border-b border-border pb-3">
@@ -364,7 +364,7 @@ export const BlogPostPage: React.FC = () => {
                             </div>
 
                             {relatedPosts.length > 0 && (
-                                <div className="rounded-[24px] border border-border bg-card p-5 shadow-sm">
+                                <div className="rounded-[24px] border border-border bg-card p-5">
                                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Related stories</p>
                                     <div className="mt-4 space-y-4">
                                         {relatedPosts.map((relatedPost) => (

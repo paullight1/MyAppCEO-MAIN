@@ -37,6 +37,24 @@ export interface AppStoreConnection {
     connectedAt: string;
 }
 
+export interface AppStoreMetric {
+    id: string;
+    appId: string;
+    appleAppId: string;
+    appleAppName: string | null;
+    bundleId: string | null;
+    metricDate: string;
+    downloads: number | null;
+    /** Decimal strings (Postgres numeric) — parse before math. */
+    proceedsAmount: string | null;
+    proceedsCurrency: string | null;
+    ratingAverage: string | null;
+    ratingCount: number | null;
+}
+
+/** What `syncMetrics` returns per Apple app (no id/appId — not persisted yet). */
+export type AppStoreMetricSnapshot = Omit<AppStoreMetric, 'id' | 'appId'>;
+
 export interface AppStoreCredentials {
     /** Issuer ID (UUID) from Users and Access → Integrations → App Store Connect API. */
     issuerId: string;
@@ -83,5 +101,20 @@ export const useAppStoreConnect = () => {
             apiDelete<ApiResponse<{ success: boolean }>>(`/integrations/app-store/${appId}`),
         );
 
-    return { getConnection, connect, sync, disconnect, isLoading, error };
+    /** Pull the latest downloads, proceeds, and ratings from App Store Connect. */
+    const syncMetrics = (appId: string) =>
+        run(() =>
+            apiPost<ApiResponse<AppStoreMetricSnapshot[]>>(
+                `/integrations/app-store/${appId}/metrics/sync`,
+                {},
+            ),
+        );
+
+    /** Read stored metric snapshots for an app (most recent first). */
+    const getMetrics = (appId: string) =>
+        run(() =>
+            apiGetAuth<ApiResponse<AppStoreMetric[]>>(`/integrations/app-store/${appId}/metrics`),
+        );
+
+    return { getConnection, connect, sync, disconnect, syncMetrics, getMetrics, isLoading, error };
 };

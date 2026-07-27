@@ -37,7 +37,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 
     return (
         <div
-            className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${BG_GRADIENTS[gradient]} border-0 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 text-white`}
+            className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${BG_GRADIENTS[gradient]} border-0 p-6 transition-all duration-300 text-white`}
         >
             <div className="flex items-start justify-between">
                 <div className="space-y-4">
@@ -65,7 +65,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
                     )}
                 </div>
                 <div
-                    className={`w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white shadow-lg`}
+                    className={`w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white`}
                 >
                     {icon}
                 </div>

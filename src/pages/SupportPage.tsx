@@ -111,7 +111,7 @@ export const SupportPage: React.FC = () => {
 
                     {/* 2. FAQ & Support Links */}
                     <div className="space-y-8">
-                        <div className="bg-card p-8 rounded-3xl border border-border shadow-sm space-y-6">
+                        <div className="bg-card p-8 rounded-3xl border border-border space-y-6">
                             <h3 className="text-xl font-bold flex items-center gap-2 text-foreground">
                                 <HelpCircle size={20} className="text-accent" />
                                 Common Questions
@@ -136,7 +136,7 @@ export const SupportPage: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-accent to-accent/80 p-8 rounded-3xl text-accent-foreground shadow-xl shadow-accent/20 space-y-6">
+                        <div className="bg-gradient-to-br from-accent to-accent/80 p-8 rounded-3xl text-accent-foreground space-y-6">
                             <h3 className="text-xl font-bold">Priority Support</h3>
                             <p className="opacity-90 text-sm leading-relaxed">As a verified CEO, you have access to 24/7 human support for financial and asset transfer issues.</p>
                             <form onSubmit={handleSubmitTicket} className="space-y-3">
@@ -190,7 +190,7 @@ export const SupportPage: React.FC = () => {
                             </form>
                         </div>
 
-                        <div className="bg-card p-8 rounded-3xl border border-border shadow-sm space-y-4">
+                        <div className="bg-card p-8 rounded-3xl border border-border space-y-4">
                             <h3 className="text-xl font-bold text-foreground">Recent Tickets</h3>
                             {ticketsLoading ? (
                                 <LoadingState

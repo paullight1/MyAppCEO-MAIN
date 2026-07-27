@@ -216,7 +216,7 @@ export const TopicDetailPage: React.FC = () => {
                 <div className="bg-card border border-border rounded-2xl p-6">
                     <div className="flex justify-between items-start mb-6">
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white font-bold text-xl">
                                 {topic.author?.fullName?.[0] || '?'}
                             </div>
                             <div>
@@ -342,7 +342,7 @@ export const TopicDetailPage: React.FC = () => {
                             </div>
                         )}
                         <div className="flex gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white font-bold shadow-md flex-shrink-0">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white font-bold flex-shrink-0">
                                 {user.fullName?.[0] || user.email?.[0] || '?'}
                             </div>
                             <div className="flex-1">

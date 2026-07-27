@@ -138,7 +138,7 @@ export const StakeMonitorPage: React.FC = () => {
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {stats.map((stat, idx) => (
-                                <div key={idx} className="bg-card border border-border p-6 rounded-3xl space-y-4 hover:shadow-md transition-all group">
+                                <div key={idx} className="bg-card border border-border p-6 rounded-3xl space-y-4 transition-all group">
                                     <div className={`p-3 ${stat.bg} rounded-2xl w-fit group-hover:scale-110 transition-transform`}>
                                         {stat.icon}
                                     </div>
@@ -153,7 +153,7 @@ export const StakeMonitorPage: React.FC = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             {/* Active Stakes Table */}
                             <div className="lg:col-span-2">
-                                <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm">
+                                <div className="bg-card border border-border rounded-3xl overflow-hidden">
                                     <div className="p-6 border-b border-border">
                                         <h3 className="font-black text-lg text-foreground">Active Stakes</h3>
                                     </div>
@@ -199,7 +199,7 @@ export const StakeMonitorPage: React.FC = () => {
 
                             {/* Distributions timeline */}
                             <div>
-                                <div className="bg-card border border-border rounded-3xl p-6 space-y-5 shadow-sm">
+                                <div className="bg-card border border-border rounded-3xl p-6 space-y-5">
                                     <div className="flex items-center justify-between">
                                         <h3 className="font-bold text-lg text-foreground">Distributions</h3>
                                         {pendingCount > 0 && (

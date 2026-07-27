@@ -178,7 +178,7 @@ export const ManageListingsPage: React.FC = () => {
                 </div>
 
                 {view === 'listings' ? (
-                    <div className="min-h-[400px] overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                    <div className="min-h-[400px] overflow-hidden rounded-2xl border border-border bg-card">
                         <div className="flex items-center justify-between border-b border-border p-6">
                             <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
                                 {LISTING_FILTERS.map((f) => (

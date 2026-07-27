@@ -94,7 +94,7 @@ export const OffersTable: React.FC = () => {
         offer.date || new Date(offer.createdAt).toLocaleDateString();
 
     return (
-        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
             <div className="flex items-center justify-between border-b border-border p-6">
                 <div>
                     <h3 className="font-semibold text-foreground">Recent offers</h3>

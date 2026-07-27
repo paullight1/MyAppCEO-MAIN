@@ -131,7 +131,7 @@ export const StakesPage: React.FC = () => {
                         <Link to="/stakes/monitor" className="px-6 py-3 bg-card border border-border text-foreground rounded-xl hover:bg-muted transition-all font-semibold flex items-center gap-2 text-sm">
                             <PieChart size={18} /> Stake Monitor
                         </Link>
-                        <Link to="/campaigns" className="px-6 py-3 bg-accent text-white rounded-xl hover:bg-accent/90 transition-all shadow-sm shadow-accent/20 font-semibold flex items-center gap-2 text-sm">
+                        <Link to="/campaigns" className="px-6 py-3 bg-accent text-white rounded-xl hover:bg-accent/90 transition-all font-semibold flex items-center gap-2 text-sm">
                             <TrendingUp size={18} /> Discover New Offerings
                         </Link>
                     </div>
@@ -152,7 +152,7 @@ export const StakesPage: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="bg-card p-6 rounded-3xl border border-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
+                        className="bg-card p-6 rounded-3xl border border-border transition-shadow relative overflow-hidden group"
                     >
                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                             <Banknote size={64} />
@@ -172,7 +172,7 @@ export const StakesPage: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-card p-6 rounded-3xl border border-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
+                        className="bg-card p-6 rounded-3xl border border-border transition-shadow relative overflow-hidden group"
                     >
                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                             <TrendingUp size={64} />
@@ -188,7 +188,7 @@ export const StakesPage: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-card p-6 rounded-3xl border border-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
+                        className="bg-card p-6 rounded-3xl border border-border transition-shadow relative overflow-hidden group"
                     >
                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                             <Percent size={64} />
@@ -206,7 +206,7 @@ export const StakesPage: React.FC = () => {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="bg-card p-8 rounded-[40px] border border-border shadow-sm space-y-6 flex flex-col"
+                        className="bg-card p-8 rounded-[40px] border border-border space-y-6 flex flex-col"
                     >
                         <h3 className="text-xl font-bold flex items-center gap-2 text-foreground">
                             <PieChart size={20} className="text-accent" />
@@ -259,7 +259,7 @@ export const StakesPage: React.FC = () => {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.5 }}
-                        className="bg-card p-8 rounded-[40px] border border-border shadow-sm space-y-6 flex flex-col"
+                        className="bg-card p-8 rounded-[40px] border border-border space-y-6 flex flex-col"
                     >
                         <div className="flex justify-between items-center">
                             <h3 className="text-xl font-bold flex items-center gap-2 text-foreground">
@@ -280,7 +280,7 @@ export const StakesPage: React.FC = () => {
                                 </div>
                             ) : (
                                 dividendPayouts.map((payout) => (
-                                    <div key={payout.key} className="flex justify-between items-center p-5 border border-border bg-card rounded-2xl shadow-sm">
+                                    <div key={payout.key} className="flex justify-between items-center p-5 border border-border bg-card rounded-2xl">
                                         <div className="flex items-center gap-4 min-w-0">
                                             <div className="w-10 h-10 bg-emerald-500/10 rounded-full flex items-center justify-center shrink-0">
                                                 <CheckCircle2 size={20} className="text-emerald-500" />

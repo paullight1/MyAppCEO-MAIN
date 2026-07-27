@@ -161,7 +161,7 @@ export const AppDashboardPage: React.FC = () => {
                 <Link
                     key={item.label}
                     to={item.path}
-                    className="group rounded-2xl bg-card p-4 text-left shadow-sm transition hover:bg-primary/10"
+                    className="group rounded-2xl bg-card border border-border p-4 text-left transition hover:bg-primary/10"
                 >
                     <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
                         <item.icon className="h-5 w-5" />
@@ -298,7 +298,7 @@ export const AppDashboardPage: React.FC = () => {
                     </button>
 
                     <div className="space-y-6">
-                        <div className="rounded-[2rem] border border-border bg-card p-8 shadow-xl">
+                        <div className="rounded-[2rem] border border-border bg-card p-8">
                             <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                 <div>
                                     <p className="text-xs font-black uppercase tracking-widest text-primary">{currentApp?.app_category || 'App workspace'}</p>
@@ -338,7 +338,7 @@ export const AppDashboardPage: React.FC = () => {
                 </button>
 
                 {/* Hero Header */}
-                <div className="bg-card rounded-[2rem] border border-border shadow-xl shadow-black/5 overflow-hidden mb-6">
+                <div className="bg-card rounded-[2rem] border border-border overflow-hidden mb-6">
                     <div className="p-8 sm:p-10 bg-gradient-to-br from-accent/5 via-transparent to-transparent relative">
                         <div className="absolute top-0 right-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl opacity-50 pointer-events-none" />
 
@@ -368,7 +368,7 @@ export const AppDashboardPage: React.FC = () => {
                                     type="button"
                                     onClick={() => refetchOverview()}
                                     disabled={overviewLoading}
-                                    className="inline-flex items-center gap-2 rounded-xl bg-card px-4 py-2.5 text-sm font-bold text-muted-foreground shadow-sm ring-1 ring-border transition hover:text-foreground disabled:opacity-50"
+                                    className="inline-flex items-center gap-2 rounded-xl bg-card px-4 py-2.5 text-sm font-bold text-muted-foreground ring-1 ring-border transition hover:text-foreground disabled:opacity-50"
                                 >
                                     <RefreshCw className={`h-4 w-4 ${overviewLoading ? 'animate-spin' : ''}`} />
                                     {overviewLoading ? 'Refreshing' : 'Refresh'}
@@ -376,7 +376,7 @@ export const AppDashboardPage: React.FC = () => {
                                 {canManage && (
                                     <Link
                                         to={`/apps/${id}/team`}
-                                        className="inline-flex items-center gap-2 rounded-xl bg-card px-4 py-2.5 text-sm font-bold text-primary shadow-sm ring-1 ring-primary/15 transition hover:bg-primary/10"
+                                        className="inline-flex items-center gap-2 rounded-xl bg-card px-4 py-2.5 text-sm font-bold text-primary ring-1 ring-primary/15 transition hover:bg-primary/10"
                                     >
                                         <Users className="h-4 w-4" />
                                         Invite co-founder
@@ -385,7 +385,7 @@ export const AppDashboardPage: React.FC = () => {
                                 {canFundraise && (
                                     <Link
                                         to={`/campaigns/new?appId=${id}`}
-                                        className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+                                        className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition hover:bg-primary/90"
                                     >
                                         <Rocket className="h-4 w-4" />
                                         Raise funding
@@ -481,7 +481,7 @@ export const AppDashboardPage: React.FC = () => {
                                 />
 
                                 {/* Phase Timeline */}
-                                {progress.phases?.length > 0 && <div className="bg-card rounded-[2rem] border border-border shadow-sm p-8">
+                                {progress.phases?.length > 0 && <div className="bg-card rounded-[2rem] border border-border p-8">
                                     <h3 className="text-sm font-bold text-foreground mb-6 uppercase tracking-wider">Phase Timeline</h3>
                                     <div className="flex items-center gap-3 overflow-x-auto pb-2">
                                         {progress.phases?.map((phase: DevelopmentPhase, index: number) => {
@@ -518,7 +518,7 @@ export const AppDashboardPage: React.FC = () => {
 
                                 {/* Recent Deployments */}
                                 {progress.deployments?.length > 0 && (
-                                    <div className="bg-card rounded-[2rem] border border-border shadow-sm p-8">
+                                    <div className="bg-card rounded-[2rem] border border-border p-8">
                                         <div className="flex items-center justify-between mb-6">
                                             <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Recent Deployments</h3>
                                             <button onClick={() => setActiveTab('deployments')} className="text-sm text-accent font-bold hover:underline">
@@ -552,7 +552,7 @@ export const AppDashboardPage: React.FC = () => {
 
                         {/* PHASES */}
                         {activeTab === 'phases' && (
-                            <div className="bg-card rounded-[2rem] border border-border shadow-sm p-8">
+                            <div className="bg-card rounded-[2rem] border border-border p-8">
                                 <h3 className="text-sm font-bold text-foreground mb-6 uppercase tracking-wider">All Phases</h3>
                                 <div className="space-y-4">
                                     {progress.phases?.map((phase: DevelopmentPhase) => {
@@ -603,12 +603,12 @@ export const AppDashboardPage: React.FC = () => {
 
                         {/* DEPLOYMENTS */}
                         {activeTab === 'deployments' && (
-                            <div className="bg-card rounded-[2rem] border border-border shadow-sm p-8">
+                            <div className="bg-card rounded-[2rem] border border-border p-8">
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Deployment Records</h3>
                                     <Link
                                         to={`/apps/${id}/deployments/new`}
-                                        className="px-5 py-2.5 bg-accent text-white rounded-xl hover:bg-accent/90 text-sm font-bold flex items-center gap-2 shadow-sm"
+                                        className="px-5 py-2.5 bg-accent text-white rounded-xl hover:bg-accent/90 text-sm font-bold flex items-center gap-2"
                                     >
                                         <Plus className="w-4 h-4" />
                                         New Deployment
@@ -667,10 +667,10 @@ export const AppDashboardPage: React.FC = () => {
 
                         {/* TEAM */}
                         {activeTab === 'team' && (
-                            <div className="bg-card rounded-[2rem] border border-border shadow-sm p-8">
+                            <div className="bg-card rounded-[2rem] border border-border p-8">
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Team Members</h3>
-                                    <Button onClick={() => setShowAddTeamModal(true)} className="shadow-sm">
+                                    <Button onClick={() => setShowAddTeamModal(true)} className="">
                                         <Plus className="w-4 h-4" aria-hidden="true" />
                                         Add Member
                                     </Button>
@@ -713,10 +713,10 @@ export const AppDashboardPage: React.FC = () => {
 
                         {/* UPDATES */}
                         {activeTab === 'updates' && (
-                            <div className="bg-card rounded-[2rem] border border-border shadow-sm p-8">
+                            <div className="bg-card rounded-[2rem] border border-border p-8">
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">Progress Updates</h3>
-                                    <Button onClick={() => setShowPostUpdateModal(true)} className="shadow-sm">
+                                    <Button onClick={() => setShowPostUpdateModal(true)} className="">
                                         <Plus className="w-4 h-4" aria-hidden="true" />
                                         Post Update
                                     </Button>

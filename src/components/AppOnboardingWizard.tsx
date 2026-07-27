@@ -30,6 +30,7 @@ import {
   normalizeStoreCategory,
   parseStoreAppReference,
 } from "../utils/storeImport";
+import { lookupAppleApp } from "../utils/appleCatalog";
 import {
   MARKETING_NOTIFICATION_OPTIONS,
   MarketingNotificationPreference,
@@ -153,59 +154,6 @@ const FRIENDLY_SUBMIT_ERRORS = {
   generic: "Failed to add this app. Please try again.",
 };
 
-const lookupAppleApp = async (id: string): Promise<ExternalStoreApp | null> => {
-  const response = await fetch(
-    `https://itunes.apple.com/lookup?id=${encodeURIComponent(id)}&country=US`,
-  );
-  if (!response.ok) return null;
-  const payload = await response.json();
-  const item = payload?.results?.[0];
-  if (!item) return null;
-
-  return {
-    id: String(item.trackId || id),
-    platform: "ios",
-    source: "apple-app-store",
-    country: "US",
-    fetchedAt: new Date().toISOString(),
-    name: item.trackName || "iOS App",
-    developer: item.artistName || "Unknown developer",
-    category: item.primaryGenreName || "Mobile App",
-    description: item.description || "",
-    shortDescription: item.description || "",
-    iconUrl: item.artworkUrl100 || item.artworkUrl60 || "",
-    artworkUrl: item.artworkUrl512 || item.artworkUrl100 || "",
-    screenshots: item.screenshotUrls || [],
-    rating: item.averageUserRating,
-    ratingCount: item.userRatingCount,
-    priceText: item.formattedPrice || "Free",
-    storeUrl: item.trackViewUrl || `https://apps.apple.com/app/id${id}`,
-    bundleId: item.bundleId,
-    releaseDate: item.releaseDate,
-    updatedAt: item.currentVersionReleaseDate,
-    contentRating: item.contentAdvisoryRating,
-    version: item.version,
-    rawMetadata: item,
-    media: {
-      icon: {
-        url: item.artworkUrl100 || item.artworkUrl60 || "",
-        sourceUrl: item.artworkUrl100 || item.artworkUrl60 || "",
-        title: item.trackName || "App icon",
-      },
-      artwork: {
-        url: item.artworkUrl512 || item.artworkUrl100 || "",
-        sourceUrl: item.artworkUrl512 || item.artworkUrl100 || "",
-        title: item.trackName || "App artwork",
-      },
-      screenshots: (item.screenshotUrls || []).map((url: string) => ({
-        url,
-        sourceUrl: url,
-        title: `${item.trackName || "App"} screenshot`,
-      })),
-    },
-  };
-};
-
 const normalizeOptionalUrl = (value: string) => {
   const trimmed = value.trim();
   if (!trimmed) return undefined;
@@ -278,6 +226,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isValidatingRepo, setIsValidatingRepo] = useState(false);
   const [repoValidated, setRepoValidated] = useState(false);
+  const [repoError, setRepoError] = useState("");
   const [isImportingStore, setIsImportingStore] = useState(false);
   const [storeImportError, setStoreImportError] = useState("");
   const [submitError, setSubmitError] = useState("");
@@ -363,12 +312,32 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
     setFormData((current) => ({ ...current, [key]: value }));
   };
 
+  // Client-side URL-format check only. We can't confirm the repo exists or is
+  // accessible from the browser, so we validate the shape and label it honestly
+  // rather than faking a "Verified" result.
   const validateRepo = async () => {
-    if (!formData.repoUrl) return;
+    if (!formData.repoUrl.trim()) return;
     setIsValidatingRepo(true);
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-    setRepoValidated(true);
-    setIsValidatingRepo(false);
+    setRepoError("");
+    try {
+      const url = new URL(formData.repoUrl.trim());
+      const isHttp = url.protocol === "http:" || url.protocol === "https:";
+      const isKnownHost =
+        /(github\.com|gitlab\.com|bitbucket\.org|dev\.azure\.com|sourcehut\.org|codeberg\.org|git\.)/i.test(
+          url.hostname,
+        );
+      if (isHttp && isKnownHost) {
+        setRepoValidated(true);
+      } else {
+        setRepoError(
+          "Enter a GitHub, GitLab, Bitbucket, or Azure DevOps repository URL.",
+        );
+      }
+    } catch {
+      setRepoError("That doesn't look like a valid URL.");
+    } finally {
+      setIsValidatingRepo(false);
+    }
   };
 
   const importStoreData = async () => {
@@ -561,7 +530,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
 
         <aside className="overflow-x-hidden overflow-y-auto border-b border-slate-200 bg-slate-50/90 px-6 py-7 text-slate-900 dark:border-white/10 dark:bg-white/[0.03] dark:text-white lg:border-b-0 lg:border-r lg:px-7 lg:py-8">
           <div className="flex h-full flex-col">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#0071e3] shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#0071e3] dark:border-white/10 dark:bg-white/[0.04]">
               <selectedAsset.icon size={27} />
             </div>
 
@@ -585,7 +554,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                   aria-current={item.active ? "step" : undefined}
                   className={`flex w-full items-start gap-4 rounded-2xl border px-4 py-3 text-left transition ${
                     item.active
-                      ? "border-[#0071e3]/20 bg-white shadow-sm dark:bg-white/[0.05]"
+                      ? "border-[#0071e3]/20 bg-white dark:bg-white/[0.05]"
                       : item.complete
                         ? "border-slate-200 bg-white/70 hover:bg-white dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]"
                         : "border-transparent bg-transparent opacity-85 hover:bg-white/60 dark:hover:bg-white/[0.04]"
@@ -620,7 +589,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
               ))}
             </div>
 
-            <div className="mt-8 rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.04]">
+            <div className="mt-8 rounded-[28px] border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.04]">
               <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-white/40">
                 Controlled environment
               </p>
@@ -679,12 +648,12 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                           onClick={() => updateField("assetType", asset.id)}
                           className={`rounded-2xl p-3 text-left transition active:scale-[0.98] ${
                             selected
-                              ? "border border-[#0071e3]/20 bg-white text-[#0f172a] shadow-sm dark:bg-white/[0.05]"
+                              ? "border border-[#0071e3]/20 bg-white text-[#0f172a] dark:bg-white/[0.05]"
                               : "border border-slate-200 bg-white/80 text-slate-600 hover:bg-white dark:border-white/10 dark:bg-white/[0.03] dark:text-white/65 dark:hover:bg-white/[0.06]"
                           }`}
                         >
                           <div
-                            className={`mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${asset.color} text-white shadow-lg`}
+                            className={`mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${asset.color} text-white`}
                           >
                             <Icon size={22} />
                           </div>
@@ -711,7 +680,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                         }
                       />
                     </Field>
-                    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.03]">
+                    <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]">
                       <p className="text-sm font-semibold text-slate-900 dark:text-white">
                         Detected category
                       </p>
@@ -879,7 +848,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                     )}
                   </div>
 
-                  <div className="rounded-3xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm dark:border-white/10 dark:bg-white/[0.03] dark:text-white">
+                  <div className="rounded-3xl border border-slate-200 bg-white p-5 text-slate-900 dark:border-white/10 dark:bg-white/[0.03] dark:text-white">
                     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-3">
                         <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-[#0071e3] dark:border-white/10 dark:bg-white/[0.04] dark:text-white">
@@ -896,7 +865,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                       {repoValidated && (
                         <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
                           <CheckCircle2 size={14} />
-                          Verified
+                          Format looks valid
                         </span>
                       )}
                     </div>
@@ -910,6 +879,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                         onChange={(event) => {
                           updateField("repoUrl", event.target.value);
                           setRepoValidated(false);
+                          setRepoError("");
                         }}
                       />
                       <button
@@ -926,12 +896,15 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                             Checking
                           </span>
                         ) : repoValidated ? (
-                          "Connected"
+                          "Valid"
                         ) : (
-                          "Check repo"
+                          "Check format"
                         )}
                       </button>
                     </div>
+                    {repoError && (
+                      <p className="mt-2 text-xs font-medium text-error">{repoError}</p>
+                    )}
                   </div>
 
                   <div className="grid gap-5 md:grid-cols-3">
@@ -1047,7 +1020,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                     />
                   </div>
 
-                  <div className="rounded-3xl border border-slate-200 bg-white p-5 text-slate-900 shadow-sm dark:border-white/10 dark:bg-white/[0.03] dark:text-white">
+                  <div className="rounded-3xl border border-slate-200 bg-white p-5 text-slate-900 dark:border-white/10 dark:bg-white/[0.03] dark:text-white">
                     <div className="flex items-center gap-2">
                       <Rocket size={18} className="text-[#0071e3]" />
                       <p className="text-sm font-semibold">
@@ -1075,7 +1048,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                             }
                             className={`rounded-2xl border p-4 text-left transition active:scale-[0.98] ${
                               selected
-                                ? "border-[#0071e3]/20 bg-white shadow-sm dark:bg-white/[0.05]"
+                                ? "border-[#0071e3]/20 bg-white dark:bg-white/[0.05]"
                                 : "border-slate-200 bg-white/70 hover:border-[#0071e3]/25 hover:bg-white dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]"
                             }`}
                           >
@@ -1099,9 +1072,9 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                   title="Review your app profile"
                   subtitle="Make sure the asset details are clear before adding it to your dashboard."
                 >
-                  <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.03]">
+                  <div className="rounded-3xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-white/[0.03]">
                     <div
-                      className={`mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br ${selectedAsset.color} text-white shadow-lg`}
+                      className={`mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br ${selectedAsset.color} text-white`}
                     >
                       <selectedAsset.icon size={30} />
                     </div>
@@ -1202,7 +1175,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                       transition={{ repeat: Infinity, duration: 2 }}
                       className="absolute inset-0 rounded-full bg-emerald-400 blur-xl"
                     />
-                    <div className="relative flex h-24 w-24 items-center justify-center rounded-[2rem] bg-emerald-500 text-white shadow-[0_22px_60px_rgba(16,185,129,0.35)]">
+                    <div className="relative flex h-24 w-24 items-center justify-center rounded-[2rem] bg-emerald-500 text-white">
                       <CheckCircle2 size={48} />
                     </div>
                   </div>
@@ -1224,7 +1197,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                           : "/apps",
                       );
                     }}
-                    className="mt-8 rounded-2xl bg-[#0071e3] px-8 py-4 text-sm font-bold text-white shadow-[0_18px_40px_rgba(0,113,227,0.28)] transition hover:bg-[#0077ed] active:scale-[0.98]"
+                    className="mt-8 rounded-2xl bg-[#0071e3] px-8 py-4 text-sm font-bold text-white transition hover:bg-[#0077ed] active:scale-[0.98]"
                   >
                     Open app dashboard
                   </button>
@@ -1261,7 +1234,7 @@ export const AppOnboardingWizard: React.FC<AppOnboardingWizardProps> = ({
                   className={`inline-flex h-12 items-center gap-2 rounded-2xl px-6 text-sm font-bold transition active:scale-[0.98] ${
                     isSubmitting || !stepIsValid
                       ? "cursor-not-allowed bg-slate-200 text-slate-400 dark:bg-white/10 dark:text-white/30"
-                      : "bg-[#0071e3] text-white shadow-[0_16px_36px_rgba(0,113,227,0.25)] hover:bg-[#0077ed]"
+                      : "bg-[#0071e3] text-white hover:bg-[#0077ed]"
                   }`}
                 >
                   {isSubmitting ? (
@@ -1341,7 +1314,7 @@ const InfoCard: React.FC<{
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/[0.03]">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]">
       <div
         className={`mb-4 flex h-11 w-11 items-center justify-center rounded-2xl ${tones[tone]}`}
       >

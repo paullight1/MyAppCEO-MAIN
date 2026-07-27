@@ -170,7 +170,7 @@ export const MyInvestmentsPage: React.FC = () => {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05 }}
-                                        className="bg-card rounded-2xl border border-border p-6 hover:border-accent/30 hover:shadow-lg transition-all group"
+                                        className="bg-card rounded-2xl border border-border p-6 hover:border-accent/30 transition-all group"
                                     >
                                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                                             <div className="flex-1 min-w-0">

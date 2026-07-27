@@ -38,7 +38,7 @@ export const QuickActionCard: React.FC<QuickActionCardProps> = ({
       className={`flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl border transition-all min-w-[72px] sm:min-w-[88px] ${
         disabled
           ? 'bg-muted border-border opacity-40 cursor-not-allowed'
-          : 'bg-card border-border hover:border-primary/30 hover:shadow-sm active:scale-[0.96]'
+          : 'bg-card border-border hover:border-primary/30 active:scale-[0.96]'
       }`}
     >
       <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center ${

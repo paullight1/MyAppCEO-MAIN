@@ -19,7 +19,8 @@ export const ERROR_MESSAGES = {
   SIGN_OUT_FAILED: 'Failed to sign out. Please try again.',
   SESSION_FETCH_FAILED: 'Failed to fetch session data.',
   TOKEN_EXPIRED: 'Your session has expired. Please sign in again.',
-  NETWORK_ERROR: 'Unable to connect to authentication service. Check your network.',
+  NETWORK_ERROR:
+    "Can't reach the authentication service. Check your connection — or, if this persists, the Supabase project may be paused or unreachable.",
 } as const;
 
 export const isNetworkError = (err: unknown): boolean => {

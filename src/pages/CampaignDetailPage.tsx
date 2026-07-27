@@ -281,7 +281,7 @@ export const CampaignDetailPage: React.FC = () => {
                     </div>
                 )}
 
-                <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+                <div className="bg-card rounded-2xl border border-border overflow-hidden">
                     {/* Hero cover */}
                     <div className="relative aspect-[3/1] w-full overflow-hidden bg-muted">
                         {campaign.coverImageUrl ? (

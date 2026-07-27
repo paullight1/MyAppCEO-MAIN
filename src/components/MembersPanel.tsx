@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 import { UsersRound, Mail, Copy, Loader2, Search, UserPlus, Shield, X, Crown, Users, Briefcase, AlertCircle } from 'lucide-react';
 import { RoleBadge } from './RoleBadge';
 import { useAppRole } from '../hooks/useAppRole';
+import { useUserStatus } from '../hooks/useUserStatus';
 import { CofounderInviteModal } from './modals/CofounderInviteModal';
+
+const ASSIGNABLE_ROLES = [
+  { id: 'ceo', label: 'CEO' },
+  { id: 'co_founder', label: 'Co-Founder' },
+  { id: 'shareholder', label: 'Shareholder' },
+  { id: 'early_employee', label: 'Early Employee' },
+  { id: 'advisor', label: 'Advisor' },
+];
 
 interface MembersPanelProps {
   appId: string;
@@ -46,7 +55,9 @@ const copyTextToClipboard = async (text: string) => {
 };
 
 export const MembersPanel: React.FC<MembersPanelProps> = ({ appId }) => {
-  const { getMembers, removeMember } = useAppRole();
+  const { getMembers, removeMember, updateMemberRole, getRole } = useAppRole();
+  const { isAdmin } = useUserStatus();
+  const [canManage, setCanManage] = useState(false);
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -77,6 +88,16 @@ export const MembersPanel: React.FC<MembersPanelProps> = ({ appId }) => {
   React.useEffect(() => {
     loadMembers();
   }, [loadMembers]);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    getRole(appId).then(result => {
+      if (!cancelled && result.success && result.data) {
+        setCanManage(Boolean(result.data.permissions?.manage_team));
+      }
+    }).catch(() => undefined);
+    return () => { cancelled = true; };
+  }, [appId, getRole]);
 
   React.useEffect(() => {
     return () => {
@@ -111,6 +132,22 @@ export const MembersPanel: React.FC<MembersPanelProps> = ({ appId }) => {
     }
   };
 
+  const handleRoleChange = async (memberId: string, newRole: string) => {
+    setActionLoading(memberId);
+    setError('');
+    try {
+      const result = await updateMemberRole(memberId, newRole);
+      if (!result.success) throw new Error(result.error || 'Failed to update role');
+      loadMembers();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update role');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const allowRoleManagement = canManage || isAdmin;
+
   const query = searchQuery.trim().toLowerCase();
   const filteredMembers = members.filter(m =>
     !query ||
@@ -119,9 +156,10 @@ export const MembersPanel: React.FC<MembersPanelProps> = ({ appId }) => {
     m.role?.toLowerCase().includes(query)
   );
 
-  const KNOWN_ROLES = ['owner', 'cofounder', 'shareholder'];
+  const KNOWN_ROLES = ['owner', 'ceo', 'cofounder', 'shareholder'];
   const groupedMembers = {
     owners: filteredMembers.filter(m => m.role === 'owner'),
+    ceos: filteredMembers.filter(m => m.role === 'ceo'),
     cofounders: filteredMembers.filter(m => m.role === 'cofounder'),
     shareholders: filteredMembers.filter(m => m.role === 'shareholder'),
     others: filteredMembers.filter(m => !m.role || !KNOWN_ROLES.includes(m.role)),
@@ -175,7 +213,7 @@ export const MembersPanel: React.FC<MembersPanelProps> = ({ appId }) => {
       </div>
 
       {/* Invite Note */}
-      <div className="p-4 bg-muted rounded-2xl border border-border shadow-sm">
+      <div className="p-4 bg-muted rounded-2xl border border-border">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
@@ -214,6 +252,15 @@ export const MembersPanel: React.FC<MembersPanelProps> = ({ appId }) => {
         <MemberGroup icon={<Crown size={12} className="text-amber-500" />} label="Owner">
           {groupedMembers.owners.map(member => (
             <MemberCard key={member.id} member={member} isOwner onRemove={handleRemove} actionLoading={actionLoading} />
+          ))}
+        </MemberGroup>
+      )}
+
+      {/* CEO */}
+      {groupedMembers.ceos.length > 0 && (
+        <MemberGroup icon={<Crown size={12} className="text-purple-500" />} label={`CEO (${groupedMembers.ceos.length})`}>
+          {groupedMembers.ceos.map(member => (
+            <MemberCard key={member.id} member={member} isOwner={false} onRemove={handleRemove} actionLoading={actionLoading} canManage={allowRoleManagement} onRoleChange={handleRoleChange} />
           ))}
         </MemberGroup>
       )}

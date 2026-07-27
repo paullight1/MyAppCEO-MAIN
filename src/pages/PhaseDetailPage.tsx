@@ -138,7 +138,7 @@ export const PhaseDetailPage: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-card rounded-[2rem] border border-border shadow-xl shadow-black/5 overflow-hidden"
+                    className="bg-card rounded-[2rem] border border-border overflow-hidden"
                 >
                     <div className="p-8 sm:p-10 border-b border-border bg-gradient-to-br from-accent/5 via-transparent to-transparent relative">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl opacity-50 pointer-events-none" />
@@ -198,7 +198,7 @@ export const PhaseDetailPage: React.FC = () => {
                             <button
                                 onClick={handleStartPhase}
                                 disabled={actionLoading === 'start'}
-                                className="w-full px-6 py-4 bg-accent text-white rounded-2xl hover:bg-accent/90 disabled:opacity-50 flex items-center justify-center gap-3 font-bold mb-8 shadow-lg hover:shadow-accent/40 transition-all text-lg"
+                                className="w-full px-6 py-4 bg-accent text-white rounded-2xl hover:bg-accent/90 disabled:opacity-50 flex items-center justify-center gap-3 font-bold mb-8 transition-all text-lg"
                             >
                                 {actionLoading === 'start' ? (
                                     <Loader2 className="w-6 h-6 animate-spin" />
@@ -213,7 +213,7 @@ export const PhaseDetailPage: React.FC = () => {
                             <button
                                 onClick={handleCompletePhase}
                                 disabled={actionLoading === 'complete'}
-                                className="w-full px-6 py-4 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 disabled:opacity-50 flex items-center justify-center gap-3 font-bold mb-8 shadow-lg hover:shadow-emerald-500/40 transition-all text-lg"
+                                className="w-full px-6 py-4 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 disabled:opacity-50 flex items-center justify-center gap-3 font-bold mb-8 transition-all text-lg"
                             >
                                 {actionLoading === 'complete' ? (
                                     <Loader2 className="w-6 h-6 animate-spin" />
@@ -237,7 +237,7 @@ export const PhaseDetailPage: React.FC = () => {
                                             key={milestone.id}
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-md transition-shadow"
+                                            className="bg-card rounded-2xl overflow-hidden border border-border transition-shadow"
                                         >
                                             <div
                                                 onClick={() => setSelectedMilestone(isExpanded ? null : milestone)}
@@ -245,7 +245,7 @@ export const PhaseDetailPage: React.FC = () => {
                                             >
                                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                                     <div className="flex items-center gap-4">
-                                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold shrink-0 shadow-sm ${milestone.status === 'completed' ? 'bg-emerald-400 text-white' :
+                                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold shrink-0 ${milestone.status === 'completed' ? 'bg-emerald-400 text-white' :
                                                             milestone.status === 'in_progress' ? 'bg-accent text-white' :
                                                                 'bg-muted-foreground/10 text-muted-foreground'
                                                             }`}>
@@ -297,7 +297,7 @@ export const PhaseDetailPage: React.FC = () => {
                                                                             handleApproveMilestone(milestone.id);
                                                                         }}
                                                                         disabled={actionLoading === milestone.id}
-                                                                        className="px-5 py-2.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50 text-sm font-bold shadow-sm"
+                                                                        className="px-5 py-2.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 disabled:opacity-50 text-sm font-bold"
                                                                     >
                                                                         Approve
                                                                     </button>
@@ -362,7 +362,7 @@ export const PhaseDetailPage: React.FC = () => {
                                                                         handleCompleteMilestone(milestone.id);
                                                                     }}
                                                                     disabled={actionLoading === milestone.id}
-                                                                    className="w-full mt-6 px-6 py-3.5 bg-card border-2 border-accent text-accent rounded-xl hover:bg-accent hover:text-white disabled:opacity-50 flex items-center justify-center gap-2 font-bold transition-all shadow-sm"
+                                                                    className="w-full mt-6 px-6 py-3.5 bg-card border-2 border-accent text-accent rounded-xl hover:bg-accent hover:text-white disabled:opacity-50 flex items-center justify-center gap-2 font-bold transition-all"
                                                                 >
                                                                     {actionLoading === milestone.id ? (
                                                                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -416,7 +416,7 @@ export const PhaseDetailPage: React.FC = () => {
                             <button
                                 onClick={handleAddTask}
                                 disabled={!newTaskTitle.trim()}
-                                className="flex-1 px-6 py-4 bg-accent text-white rounded-2xl hover:bg-accent/90 disabled:opacity-50 font-bold shadow-lg shadow-accent/20 transition-all"
+                                className="flex-1 px-6 py-4 bg-accent text-white rounded-2xl hover:bg-accent/90 disabled:opacity-50 font-bold transition-all"
                             >
                                 Add Task
                             </button>

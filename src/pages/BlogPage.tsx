@@ -32,19 +32,19 @@ const HERO_COPY = {
 
 const pillClass = (isActive: boolean) =>
     `rounded-full border px-4 py-2 text-[13px] font-semibold transition-all duration-200 ${isActive
-        ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+        ? 'border-primary bg-primary text-primary-foreground'
         : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary'
     }`;
 
 const topicRowClass = (isActive: boolean) =>
     `flex w-full items-center justify-between rounded-[18px] border px-4 py-3 text-left transition-all ${isActive
-        ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+        ? 'border-primary bg-primary text-primary-foreground'
         : 'border-border bg-muted/40 text-foreground hover:border-primary/30 hover:bg-primary/5'
     }`;
 
 const LoadingGrid = () => (
     <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="overflow-hidden rounded-[30px] border border-border bg-card p-6 shadow-sm">
+        <div className="overflow-hidden rounded-[30px] border border-border bg-card p-6">
             <Skeleton className="h-6 w-36 rounded-full" />
             <Skeleton className="mt-6 h-14 w-4/5 rounded-2xl" />
             <Skeleton className="mt-4 h-4 w-full rounded-full" />
@@ -53,7 +53,7 @@ const LoadingGrid = () => (
         </div>
         <div className="space-y-5">
             {Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="overflow-hidden rounded-[24px] border border-border bg-card p-5 shadow-sm">
+                <div key={index} className="overflow-hidden rounded-[24px] border border-border bg-card p-5">
                     <Skeleton className="h-4 w-24 rounded-full" />
                     <Skeleton className="mt-4 h-6 w-4/5 rounded-full" />
                     <Skeleton className="mt-3 h-4 w-full rounded-full" />
@@ -70,7 +70,7 @@ const ArticleCard: React.FC<{ post: BlogPost; featured?: boolean }> = ({ post, f
     return (
         <Link
             to={`/blog/${post.slug}`}
-            className={`group block overflow-hidden rounded-[28px] border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md ${featured ? 'lg:col-span-2' : ''}`}
+            className={`group block overflow-hidden rounded-[28px] border border-border bg-card transition-all duration-300 hover:border-primary/40 ${featured ? 'lg:col-span-2' : ''}`}
         >
             <div className={`relative overflow-hidden ${featured ? 'aspect-[16/9]' : 'aspect-[16/11]'} bg-gradient-to-br ${theme.accent}`}>
                 {post.coverImageUrl ? (
@@ -146,7 +146,7 @@ const CompactStory: React.FC<{ post: BlogPost }> = ({ post }) => {
     return (
         <Link
             to={`/blog/${post.slug}`}
-            className="group flex gap-4 rounded-[22px] border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+            className="group flex gap-4 rounded-[22px] border border-border bg-card p-4 transition-all duration-300 hover:border-primary/40"
         >
             <div className={`relative w-24 shrink-0 overflow-hidden rounded-[18px] bg-gradient-to-br ${theme.accent}`}>
                 {post.coverImageUrl ? (
@@ -180,7 +180,7 @@ const CompactStory: React.FC<{ post: BlogPost }> = ({ post }) => {
 };
 
 const RailCard: React.FC<{ title: string; body: string; icon: React.ReactNode }> = ({ title, body, icon }) => (
-    <div className="rounded-[24px] border border-primary/20 bg-primary p-5 text-primary-foreground shadow-sm">
+    <div className="rounded-[24px] border border-primary/20 bg-primary p-5 text-primary-foreground">
         <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/15">
             {icon}
         </div>
@@ -205,11 +205,11 @@ const PaginationBar: React.FC<{
     const end = Math.min(currentPage * pageSize, totalItems);
 
     const actionClass = 'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition-all duration-200';
-    const enabledClass = 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary hover:shadow-sm';
+    const enabledClass = 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary';
     const disabledClass = 'cursor-not-allowed border-border bg-muted/40 text-muted-foreground/50';
 
     return (
-        <nav aria-label="Pagination" className="mt-8 flex flex-col gap-4 rounded-[24px] border border-border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <nav aria-label="Pagination" className="mt-8 flex flex-col gap-4 rounded-[24px] border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[13px] text-muted-foreground">
                 Showing {start}-{end} of {totalItems} posts
             </p>
@@ -366,7 +366,7 @@ export const BlogPage: React.FC = () => {
                 <section className="relative mx-auto max-w-[1400px] px-4 pb-6 pt-10 sm:px-6 lg:px-8 lg:pt-16">
                     <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
                         <div className="space-y-6">
-                            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground shadow-sm backdrop-blur">
+                            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground backdrop-blur">
                                 <Newspaper size={14} /> {heroEyebrow}
                             </span>
                             <h1 className="max-w-3xl font-serif text-[clamp(3rem,7vw,6.6rem)] leading-[0.92] tracking-[-0.055em] text-foreground">
@@ -401,7 +401,7 @@ export const BlogPage: React.FC = () => {
                             </nav>
                         </div>
 
-                        <div className="rounded-[32px] border border-border bg-card/90 p-4 shadow-sm backdrop-blur">
+                        <div className="rounded-[32px] border border-border bg-card/90 p-4 backdrop-blur">
                             {featuredPost ? (
                                 <div className="overflow-hidden rounded-[24px] border border-border">
                                     <div className={`relative aspect-[16/10] bg-gradient-to-br ${getBlogCategoryTheme(featuredPost.category).accent}`}>
@@ -459,7 +459,7 @@ export const BlogPage: React.FC = () => {
                 </section>
 
                 <section className="relative mx-auto max-w-[1400px] px-4 pb-8 sm:px-6 lg:px-8">
-                    <div className="grid gap-4 rounded-[30px] border border-primary/20 bg-primary p-6 text-primary-foreground shadow-sm lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
+                    <div className="grid gap-4 rounded-[30px] border border-primary/20 bg-primary p-6 text-primary-foreground lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
                         <div>
                             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-foreground/70">Editorial note</p>
                             <h2 className="mt-3 max-w-3xl text-[28px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[38px]">
@@ -553,7 +553,7 @@ export const BlogPage: React.FC = () => {
                                     icon={<Sparkles size={18} />}
                                 />
 
-                                <div className="rounded-[24px] border border-border bg-card p-5 shadow-sm">
+                                <div className="rounded-[24px] border border-border bg-card p-5">
                                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Topics</p>
                                     <div className="mt-4 space-y-3">
                                         <Link

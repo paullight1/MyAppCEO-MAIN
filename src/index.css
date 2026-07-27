@@ -378,15 +378,15 @@ input[type="range"]::-moz-range-thumb:hover {
      Card Styles
      ======================================== */
   .stats-card {
-    @apply bg-card rounded-2xl border border-border p-6 transition-all duration-200 hover:shadow-lg hover:border-primary/20 active:scale-[0.98];
+    @apply bg-card rounded-2xl border border-border p-6 transition-all duration-200 hover:border-primary/20 active:scale-[0.98];
   }
 
   .card-link {
-    @apply block bg-card rounded-2xl border border-border p-6 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 active:scale-[0.99];
+    @apply block bg-card rounded-2xl border border-border p-6 transition-all duration-200 hover:border-primary/30 active:scale-[0.99];
   }
 
   .card-hover {
-    @apply transition-all duration-200 hover:shadow-lg hover:border-primary/20 active:scale-[0.99];
+    @apply transition-all duration-200 hover:border-primary/20 active:scale-[0.99];
   }
 
   .card-interactive {
@@ -699,17 +699,19 @@ input[type="range"]::-moz-range-thumb:hover {
   }
 
   .stats-card {
-    @apply bg-card rounded-2xl p-6 shadow-sm transition-all duration-200 hover:shadow-lg active:scale-[0.98];
+    @apply bg-card rounded-2xl border border-border p-6 transition-all duration-200 hover:border-primary/30 active:scale-[0.98];
   }
 
   .card-link {
-    @apply block bg-card rounded-2xl p-6 shadow-sm transition-all duration-200 hover:shadow-lg active:scale-[0.99];
+    @apply block bg-card rounded-2xl border border-border p-6 transition-all duration-200 hover:border-primary/30 active:scale-[0.99];
   }
 }
 
+/* Flat, border-based cards in light mode (shadow reduction 2026-07): keep the
+   real border visible and drop the large soft shadow that was applied to every
+   bordered card surface. */
 :root:not(.dark) .bg-card.border {
-  border-color: transparent;
-  box-shadow: 0 16px 42px rgba(15, 23, 42, 0.07);
+  box-shadow: none;
 }
 
 :root:not(.dark) .bg-muted.border {
@@ -810,7 +812,7 @@ input[type="range"]::-moz-range-thumb:hover {
   }
 
   .state-panel {
-    @apply rounded-2xl border border-border bg-card p-8 text-center shadow-sm;
+    @apply rounded-2xl border border-border bg-card p-8 text-center;
   }
 }
 

@@ -135,7 +135,7 @@ export const CreatorsPage: React.FC = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: i * 0.05 }}
-                                    className="bg-card p-6 rounded-3xl border border-border shadow-sm hover:shadow-md transition-all group flex justify-between items-center"
+                                    className="bg-card p-6 rounded-3xl border border-border transition-all group flex justify-between items-center"
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-foreground">
@@ -172,7 +172,7 @@ export const CreatorsPage: React.FC = () => {
                             <AnimatedIcon icon={MessageSquare} size={20} animation="wiggle" trigger="loop" className="text-[#0071e3]" />
                             Creator Hub
                         </h3>
-                        <div className="bg-card p-8 rounded-[40px] border border-border shadow-sm space-y-6">
+                        <div className="bg-card p-8 rounded-[40px] border border-border space-y-6">
                             <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex gap-3">
                                 <ShieldCheck className="text-emerald-600 dark:text-emerald-400 shrink-0" size={20} />
                                 <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300 leading-relaxed">All payments are held in <span className="font-bold">MY APPCEO Escrow</span>. Creators are paid only after you approve the content.</p>

@@ -103,7 +103,7 @@ export const LegalEntityPage: React.FC = () => {
         {loading ? (
           <div className="flex items-center justify-center py-20"><Loader2 size={32} className="text-accent animate-spin" /></div>
         ) : (
-          <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
+          <div className="bg-card rounded-2xl border border-border p-6">
             {entity && !editing && (
               <div className="mb-6 flex items-center justify-between gap-3">
                 <div>

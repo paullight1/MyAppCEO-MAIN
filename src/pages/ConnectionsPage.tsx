@@ -30,7 +30,7 @@ import { OAuthPlatform, useSocialAutomation } from '../hooks/useSocialAutomation
 import { useUserApps, UserAppMembership } from '../hooks/useUserApps';
 import { StripeConnectAccount, StripeDispute, SubscriptionSummary, usePayments } from '../hooks/usePayments';
 import { OAUTH_MESSAGE_TYPE, useOAuthPopup } from '../hooks/useOAuthPopup';
-import { AppStoreConnection, useAppStoreConnect } from '../hooks/useAppStoreConnect';
+import { AppStoreConnection, AppStoreMetric, useAppStoreConnect } from '../hooks/useAppStoreConnect';
 import { AppStoreConnectModal } from '../components/modals/AppStoreConnectModal';
 
 /** Platforms we can actually connect today (real backend OAuth). */
@@ -102,7 +102,12 @@ export const ConnectionsPage: React.FC = () => {
     const { getConnectedAccounts, getOAuthUrl, disconnectAccount } = useSocialAutomation();
     const { connectStripe, getStripeConnectStatus, getSubscriptionSummary, getDisputes } = usePayments();
     const { open: openConnectBrowser } = useOAuthPopup();
-    const { getConnection: getAppStoreConnection, disconnect: disconnectAppStore } = useAppStoreConnect();
+    const {
+        getConnection: getAppStoreConnection,
+        disconnect: disconnectAppStore,
+        syncMetrics: syncAppStoreMetrics,
+        getMetrics: getAppStoreMetrics,
+    } = useAppStoreConnect();
 
     const [apps, setApps] = useState<UserAppMembership[]>([]);
     const [selectedAppId, setSelectedAppId] = useState<string>('');
@@ -114,6 +119,8 @@ export const ConnectionsPage: React.FC = () => {
     const [appStore, setAppStore] = useState<AppStoreConnection | null>(null);
     const [appStoreLoading, setAppStoreLoading] = useState(false);
     const [showAppStoreModal, setShowAppStoreModal] = useState(false);
+    const [appStoreMetrics, setAppStoreMetrics] = useState<AppStoreMetric[]>([]);
+    const [metricsSyncing, setMetricsSyncing] = useState(false);
 
     const [appsLoading, setAppsLoading] = useState(true);
     const [accountsLoading, setAccountsLoading] = useState(false);
@@ -192,23 +199,34 @@ export const ConnectionsPage: React.FC = () => {
         else setAccounts([]);
     }, [selectedAppId, loadAccounts]);
 
-    // App Store Connect is a per-app integration; reload it with the selection.
+    // App Store Connect is a per-app integration; reload it (and any stored
+    // metrics) with the selection.
     useEffect(() => {
         if (!selectedAppId) {
             setAppStore(null);
+            setAppStoreMetrics([]);
             return;
         }
         let active = true;
         (async () => {
             setAppStoreLoading(true);
             const res = await getAppStoreConnection(selectedAppId);
-            if (active) setAppStore(unwrap<AppStoreConnection | null>(res, null));
-            if (active) setAppStoreLoading(false);
+            const conn = unwrap<AppStoreConnection | null>(res, null);
+            if (!active) return;
+            setAppStore(conn);
+            setAppStoreLoading(false);
+
+            if (conn) {
+                const metricsRes = await getAppStoreMetrics(selectedAppId);
+                if (active) setAppStoreMetrics(unwrap<AppStoreMetric[]>(metricsRes, []));
+            } else {
+                setAppStoreMetrics([]);
+            }
         })();
         return () => {
             active = false;
         };
-    }, [selectedAppId, getAppStoreConnection]);
+    }, [selectedAppId, getAppStoreConnection, getAppStoreMetrics]);
 
     // Stripe Connect is a user-level account, loaded once.
     useEffect(() => {
@@ -355,10 +373,31 @@ export const ConnectionsPage: React.FC = () => {
         try {
             await disconnectAppStore(selectedAppId);
             setAppStore(null);
+            setAppStoreMetrics([]);
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed to disconnect App Store Connect.');
         } finally {
             setBusyPlatform(null);
+        }
+    };
+
+    const handleSyncAppStoreMetrics = async () => {
+        if (!selectedAppId) return;
+        setMetricsSyncing(true);
+        setError(null);
+        try {
+            await syncAppStoreMetrics(selectedAppId);
+            // Re-read the persisted snapshots (and refreshed connection metadata).
+            const [metricsRes, connRes] = await Promise.all([
+                getAppStoreMetrics(selectedAppId),
+                getAppStoreConnection(selectedAppId),
+            ]);
+            setAppStoreMetrics(unwrap<AppStoreMetric[]>(metricsRes, []));
+            setAppStore(unwrap<AppStoreConnection | null>(connRes, null));
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed to sync App Store metrics.');
+        } finally {
+            setMetricsSyncing(false);
         }
     };
 
@@ -373,6 +412,36 @@ export const ConnectionsPage: React.FC = () => {
 
     const appStoreConnected = appStore?.status === 'connected';
     const appStoreNeedsAttention = Boolean(appStore) && !appStoreConnected;
+
+    // Roll the most recent snapshot per Apple app into a single headline:
+    // downloads for the latest day + rating-count-weighted average stars.
+    const appStoreMetricSummary = useMemo(() => {
+        if (appStoreMetrics.length === 0) return null;
+        const latestByApple = new Map<string, AppStoreMetric>();
+        for (const m of appStoreMetrics) {
+            if (!latestByApple.has(m.appleAppId)) latestByApple.set(m.appleAppId, m);
+        }
+        const rows = [...latestByApple.values()];
+        const downloads = rows.reduce((sum, m) => sum + (m.downloads ?? 0), 0);
+        let ratingWeight = 0;
+        let ratingTotal = 0;
+        for (const m of rows) {
+            const avg = m.ratingAverage ? parseFloat(m.ratingAverage) : 0;
+            const count = m.ratingCount ?? 0;
+            if (avg > 0 && count > 0) {
+                ratingWeight += count;
+                ratingTotal += avg * count;
+            }
+        }
+        const rating = ratingWeight > 0 ? ratingTotal / ratingWeight : 0;
+        return {
+            downloads,
+            hasDownloads: rows.some((m) => m.downloads !== null),
+            rating,
+            ratingCount: ratingWeight,
+            asOf: rows[0]?.metricDate ?? null,
+        };
+    }, [appStoreMetrics]);
     const connectedCount =
         accounts.length + (stripe?.chargesEnabled ? 1 : 0) + (appStoreConnected ? 1 : 0);
     const stripeConnected = Boolean(stripe?.chargesEnabled && stripe?.payoutsEnabled);
@@ -416,7 +485,7 @@ export const ConnectionsPage: React.FC = () => {
                 <div className="bg-primary/5 rounded-2xl p-5 sm:p-6 flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full -translate-y-16 translate-x-16 blur-3xl" />
                     <div className="flex items-center gap-5 relative z-10">
-                        <div className="w-14 h-14 rounded-xl bg-card flex items-center justify-center backdrop-blur-sm shadow-sm">
+                        <div className="w-14 h-14 rounded-xl bg-card flex items-center justify-center backdrop-blur-sm">
                             <Lock size={24} className="text-primary" />
                         </div>
                         <div className="space-y-1">
@@ -450,7 +519,7 @@ export const ConnectionsPage: React.FC = () => {
                         <Loader2 className="animate-spin mr-2" size={20} /> Loading your apps…
                     </div>
                 ) : apps.length === 0 ? (
-                    <div className="bg-card rounded-2xl p-10 text-center shadow-sm">
+                    <div className="bg-card border border-border rounded-2xl p-10 text-center">
                         <Server size={28} className="mx-auto text-muted-foreground/50 mb-3" />
                         <h3 className="text-base font-bold text-foreground">No apps to connect yet</h3>
                         <p className="text-sm text-muted-foreground mt-1">Create or claim an app first, then connect services to it here.</p>
@@ -475,7 +544,7 @@ export const ConnectionsPage: React.FC = () => {
                                     const isConnected = Boolean(account);
                                     const busy = busyPlatform === platform.id;
                                     return (
-                                        <div key={platform.id} className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col gap-5">
+                                        <div key={platform.id} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-5">
                                             <div className="flex items-start justify-between gap-4">
                                                 <div className="flex items-center gap-4 min-w-0">
                                                     <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center">
@@ -534,7 +603,7 @@ export const ConnectionsPage: React.FC = () => {
                                 </div>
                                 Billing & Revenue
                             </h3>
-                            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div className="bg-card border border-border rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div className="flex items-center gap-4">
                                     <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center">
                                         {/* Stripe brand color retained for the service logo swatch. */}
@@ -572,7 +641,7 @@ export const ConnectionsPage: React.FC = () => {
                                 </div>
                                 App Stores &amp; Analytics
                             </h3>
-                            <div className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col gap-5">
+                            <div className="bg-card border border-border rounded-xl p-5 flex flex-col gap-5">
                                 <div className="flex items-start justify-between gap-4">
                                     <div className="flex items-center gap-4 min-w-0">
                                         <div className="w-11 h-11 rounded-xl bg-muted flex items-center justify-center">
@@ -595,6 +664,30 @@ export const ConnectionsPage: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* Latest synced metrics */}
+                                {appStoreConnected && appStoreMetricSummary && (
+                                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-xl bg-muted/40 px-4 py-3">
+                                        {appStoreMetricSummary.hasDownloads && (
+                                            <div>
+                                                <p className="text-sm font-bold text-foreground">{appStoreMetricSummary.downloads.toLocaleString()}</p>
+                                                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">Downloads</p>
+                                            </div>
+                                        )}
+                                        {appStoreMetricSummary.ratingCount > 0 && (
+                                            <div>
+                                                <p className="text-sm font-bold text-foreground">
+                                                    {appStoreMetricSummary.rating.toFixed(2)}★ <span className="font-medium text-muted-foreground">({appStoreMetricSummary.ratingCount.toLocaleString()})</span>
+                                                </p>
+                                                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">Avg. rating</p>
+                                            </div>
+                                        )}
+                                        {appStoreMetricSummary.asOf && (
+                                            <p className="ml-auto text-[10px] text-muted-foreground/60">as of {appStoreMetricSummary.asOf}</p>
+                                        )}
+                                    </div>
+                                )}
+
                                 <div className="flex items-center justify-between gap-4">
                                     <div className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">
                                         {appStoreConnected ? (
@@ -602,6 +695,17 @@ export const ConnectionsPage: React.FC = () => {
                                         ) : 'Uses an App Store Connect API key'}
                                     </div>
                                     <div className="flex items-center gap-2">
+                                        {appStoreConnected && (
+                                            <button
+                                                type="button"
+                                                onClick={handleSyncAppStoreMetrics}
+                                                disabled={metricsSyncing}
+                                                className="px-4 py-2 rounded-xl bg-muted text-foreground text-xs font-bold hover:bg-muted/70 transition-all disabled:opacity-60 inline-flex items-center gap-2"
+                                            >
+                                                {metricsSyncing ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+                                                {metricsSyncing ? 'Syncing…' : 'Sync metrics'}
+                                            </button>
+                                        )}
                                         {appStoreConnected && (
                                             <button
                                                 type="button"
@@ -651,21 +755,21 @@ export const ConnectionsPage: React.FC = () => {
                                 {/* MRR tiles */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {mrrByCurrency.length === 0 ? (
-                                        <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+                                        <div className="bg-card border border-border rounded-xl p-5">
                                             <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">Monthly recurring revenue</p>
                                             <p className="mt-2 text-2xl font-black text-foreground">{formatMoney(0, 'usd')}</p>
                                             <p className="mt-1 text-xs text-muted-foreground">No active subscriptions synced yet.</p>
                                         </div>
                                     ) : (
                                         mrrByCurrency.map((c) => (
-                                            <div key={c.currency} className="bg-card border border-border rounded-xl p-5 shadow-sm">
+                                            <div key={c.currency} className="bg-card border border-border rounded-xl p-5">
                                                 <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">MRR · {c.currency.toUpperCase()}</p>
                                                 <p className="mt-2 text-2xl font-black text-foreground">{formatMoney(c.totalMrr, c.currency)}</p>
                                                 <p className="mt-1 text-xs text-muted-foreground">{c.activeSubscriptions} active {c.activeSubscriptions === 1 ? 'subscription' : 'subscriptions'}</p>
                                             </div>
                                         ))
                                     )}
-                                    <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+                                    <div className="bg-card border border-border rounded-xl p-5">
                                         <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground/60">Active subscriptions</p>
                                         <p className="mt-2 text-2xl font-black text-foreground">{activeSubscriptions}</p>
                                         <p className="mt-1 text-xs text-muted-foreground">Across all connected customers.</p>
@@ -673,7 +777,7 @@ export const ConnectionsPage: React.FC = () => {
                                 </div>
 
                                 {/* Disputes list */}
-                                <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+                                <div className="bg-card border border-border rounded-xl overflow-hidden">
                                     <div className="flex items-center justify-between gap-4 p-5 border-b border-border">
                                         <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                                             <AlertTriangle size={15} className={actionDisputes > 0 ? 'text-error' : 'text-muted-foreground'} />

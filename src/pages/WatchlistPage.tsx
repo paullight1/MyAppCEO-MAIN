@@ -73,7 +73,7 @@ export const WatchlistPage: React.FC = () => {
                             Back to Marketplace
                         </Link>
                         <div className="flex items-center gap-4">
-                            <div className="rounded-3xl border border-primary/20 bg-primary/10 p-4 text-primary shadow-sm">
+                            <div className="rounded-3xl border border-primary/20 bg-primary/10 p-4 text-primary">
                                 <Bookmark size={32} fill="currentColor" />
                             </div>
                             <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">My Watchlist</h1>
@@ -83,7 +83,7 @@ export const WatchlistPage: React.FC = () => {
                         </p>
                     </div>
 
-                    <div className="rounded-3xl border border-border bg-card px-6 py-4 shadow-sm">
+                    <div className="rounded-3xl border border-border bg-card px-6 py-4">
                         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Saved listings</p>
                         <p className="text-2xl font-bold text-foreground">{watchlist.length}</p>
                     </div>
@@ -222,7 +222,7 @@ export const WatchlistPage: React.FC = () => {
                         </div>
                         <Link
                             to="/settings"
-                            className="rounded-2xl border border-border bg-card px-8 py-4 font-bold text-foreground shadow-sm transition-all hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            className="rounded-2xl border border-border bg-card px-8 py-4 font-bold text-foreground transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         >
                             Notification Settings
                         </Link>

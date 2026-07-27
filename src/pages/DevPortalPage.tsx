@@ -319,7 +319,7 @@ export const DevPortalPage: React.FC = () => {
         <Layout>
             <div className="space-y-10 pb-20">
                 {/* Navy hero — intentionally dark in both themes. */}
-                <header className="rounded-3xl bg-[#0f172a] px-6 py-10 text-white shadow-sm sm:px-10">
+                <header className="rounded-3xl bg-[#0f172a] px-6 py-10 text-white sm:px-10">
                     <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
                         <div className="max-w-3xl">
                             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-wide text-sky-300">
@@ -409,7 +409,7 @@ export const DevPortalPage: React.FC = () => {
 
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
                     <main className="space-y-8">
-                        <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                        <section className="rounded-2xl border border-border bg-card p-6">
                             <div className="flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-start sm:justify-between">
                                 <div>
                                     <h2 className="text-xl font-black text-foreground">Create API key</h2>
@@ -477,7 +477,7 @@ export const DevPortalPage: React.FC = () => {
                             </div>
                         </section>
 
-                        <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                        <section className="rounded-2xl border border-border bg-card p-6">
                             <div className="flex items-start justify-between gap-4">
                                 <div>
                                     <h2 className="text-xl font-black text-foreground">API keys</h2>
@@ -569,7 +569,7 @@ export const DevPortalPage: React.FC = () => {
                     </main>
 
                     <aside className="space-y-6">
-                        <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                        <section className="rounded-2xl border border-border bg-card p-6">
                             <h3 className="flex items-center gap-2 text-lg font-black text-foreground">
                                 <Code2 size={20} className="text-primary" /> API reference
                             </h3>
@@ -606,7 +606,7 @@ export const DevPortalPage: React.FC = () => {
                         </section>
 
                         {/* Terminal panel — intentionally dark in both themes. */}
-                        <section className="rounded-2xl bg-slate-900 p-6 text-white shadow-sm">
+                        <section className="rounded-2xl bg-slate-900 p-6 text-white">
                             <h3 className="flex items-center gap-2 text-lg font-black">
                                 <Package size={20} className="text-sky-300" /> SDK quick start
                             </h3>
@@ -629,7 +629,7 @@ export const DevPortalPage: React.FC = () => {
                             </div>
                         </section>
 
-                        <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                        <section className="rounded-2xl border border-border bg-card p-6">
                             <h3 className="flex items-center gap-2 text-lg font-black text-foreground">
                                 <Webhook size={20} className="text-primary" /> Webhook events
                             </h3>
@@ -642,7 +642,7 @@ export const DevPortalPage: React.FC = () => {
                             </div>
                         </section>
 
-                        <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                        <section className="rounded-2xl border border-border bg-card p-6">
                             <h3 className="flex items-center gap-2 text-lg font-black text-foreground">
                                 <Activity size={20} className="text-primary" /> Release note
                             </h3>

@@ -292,7 +292,7 @@ export const CreateIdeaPage: React.FC = () => {
                                 onClick={() => updateForm('category', cat.id)}
                                 className={`p-4 rounded-xl text-left border transition-all ${
                                     isSelected
-                                        ? 'bg-primary/10 border-primary/40 shadow-sm'
+                                        ? 'bg-primary/10 border-primary/40'
                                         : 'bg-muted border-border hover:bg-muted/70'
                                 }`}
                             >
@@ -322,7 +322,7 @@ export const CreateIdeaPage: React.FC = () => {
                                 onClick={() => updateForm('platform', plat.id)}
                                 className={`p-4 rounded-xl text-center border transition-all ${
                                     isSelected
-                                        ? 'bg-primary/10 border-primary/40 shadow-sm'
+                                        ? 'bg-primary/10 border-primary/40'
                                         : 'bg-muted border-border hover:bg-muted/70'
                                 }`}
                             >
@@ -551,7 +551,7 @@ export const CreateIdeaPage: React.FC = () => {
                     Back
                 </button>
 
-                <div className="bg-card border border-border rounded-2xl shadow-sm p-8">
+                <div className="bg-card border border-border rounded-2xl p-8">
                     {renderStepIndicator()}
 
                     <form onSubmit={(e) => e.preventDefault()}>

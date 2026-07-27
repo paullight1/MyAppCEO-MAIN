@@ -184,7 +184,7 @@ export const AuditLogPage: React.FC = () => {
                         </button>
                         <button
                             onClick={refetch}
-                            className="px-6 py-3 bg-primary text-primary-foreground rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-primary/90 transition-all shadow-xl"
+                            className="px-6 py-3 bg-primary text-primary-foreground rounded-2xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-primary/90 transition-all"
                         >
                             <RefreshCw size={18} /> Refresh Log
                         </button>
@@ -200,7 +200,7 @@ export const AuditLogPage: React.FC = () => {
                     ].map(card => {
                         const Icon = card.icon;
                         return (
-                            <div key={card.label} className="bg-card p-5 rounded-2xl border border-border shadow-sm flex items-center gap-4">
+                            <div key={card.label} className="bg-card p-5 rounded-2xl border border-border flex items-center gap-4">
                                 <div className={`p-3 rounded-xl ${card.tone}`}>
                                     <Icon size={22} />
                                 </div>
@@ -221,7 +221,7 @@ export const AuditLogPage: React.FC = () => {
                     </div>
                 )}
 
-                <section className="bg-card rounded-3xl border border-border shadow-xl overflow-hidden">
+                <section className="bg-card rounded-3xl border border-border overflow-hidden">
                     <div className="p-6 border-b border-border space-y-5">
                         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
                             <h2 className="text-2xl font-black text-foreground flex items-center gap-3">
@@ -263,7 +263,7 @@ export const AuditLogPage: React.FC = () => {
                                     key={filter}
                                     onClick={() => setSeverity(filter)}
                                     aria-pressed={severity === filter}
-                                    className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap ${severity === filter ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-card text-muted-foreground hover:bg-muted border border-border'}`}
+                                    className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap ${severity === filter ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted border border-border'}`}
                                 >
                                     {formatLabel(filter)}
                                 </button>
@@ -338,7 +338,7 @@ export const AuditLogPage: React.FC = () => {
                                             <td className="px-6 py-6 text-right">
                                                 <button
                                                     onClick={() => setSelectedEvent(event)}
-                                                    className="p-3 bg-card border border-border rounded-2xl text-muted-foreground hover:text-primary hover:border-primary/50 hover:shadow-lg transition-all"
+                                                    className="p-3 bg-card border border-border rounded-2xl text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
                                                     aria-label={`View audit event ${event.id}`}
                                                 >
                                                     <Eye size={18} />

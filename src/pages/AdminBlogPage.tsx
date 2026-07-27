@@ -116,7 +116,7 @@ const PreviewCard: React.FC<{ post: BlogFormState }> = ({ post }) => {
     const excerpt = post.excerpt.trim() || buildBlogExcerpt(post.body, post.title);
 
     return (
-        <div className="overflow-hidden rounded-[28px] border border-border bg-card shadow-lg">
+        <div className="overflow-hidden rounded-[28px] border border-border bg-card">
             <div className={`relative aspect-[16/10] bg-gradient-to-br ${theme.accent}`}>
                 {post.coverImageUrl ? (
                     <img
@@ -409,7 +409,7 @@ export const AdminBlogPage: React.FC = () => {
     return (
         <DashboardLayout>
             <div className="mx-auto max-w-[1440px] space-y-8 pb-20">
-                <section className="rounded-[32px] border border-border bg-card p-6 shadow-lg">
+                <section className="rounded-[32px] border border-border bg-card p-6">
                     <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                         <div className="space-y-3">
                             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
@@ -468,7 +468,7 @@ export const AdminBlogPage: React.FC = () => {
 
                 <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
                     <section className="space-y-6">
-                        <div className="rounded-[32px] border border-border bg-card p-6 shadow-lg">
+                        <div className="rounded-[32px] border border-border bg-card p-6">
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Editor</p>
@@ -739,7 +739,7 @@ export const AdminBlogPage: React.FC = () => {
                     </section>
 
                     <aside className="space-y-6">
-                        <div className="rounded-[32px] border border-border bg-card p-6 shadow-lg">
+                        <div className="rounded-[32px] border border-border bg-card p-6">
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Library</p>
@@ -807,7 +807,7 @@ export const AdminBlogPage: React.FC = () => {
                                                     className={cn(
                                                         'w-full rounded-[22px] border p-4 text-left transition-all',
                                                         isSelected
-                                                            ? 'border-primary bg-primary/5 shadow-md'
+                                                            ? 'border-primary bg-primary/5'
                                                             : 'border-border bg-card hover:border-primary/40 hover:bg-muted',
                                                     )}
                                                 >

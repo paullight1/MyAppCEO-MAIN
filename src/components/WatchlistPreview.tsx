@@ -64,7 +64,7 @@ export const WatchlistPreview: React.FC = () => {
                     to="/watchlist"
                     className="flex min-w-[200px] snap-start flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-muted transition-all hover:border-primary hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring group/card"
                 >
-                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-card text-muted-foreground shadow-sm transition-all group-hover/card:scale-110 group-hover/card:text-primary">
+                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-card border border-border text-muted-foreground transition-all group-hover/card:scale-110 group-hover/card:text-primary">
                         <Sparkles size={24} />
                     </div>
                     <span className="text-sm font-bold text-foreground">View entire list</span>

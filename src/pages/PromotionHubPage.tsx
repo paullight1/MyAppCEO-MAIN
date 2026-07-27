@@ -195,7 +195,7 @@ export const PromotionHubPage: React.FC = () => {
                             key={tab.id}
                             onClick={() => tab.link ? navigate(tab.link) : setActiveTab(tab.id as TabType)}
                             className={`px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all ${activeTab === tab.id
-                                    ? 'bg-card text-foreground shadow-sm ring-1 ring-border'
+                                    ? 'bg-card text-foreground ring-1 ring-border'
                                     : 'text-muted-foreground hover:text-foreground'
                                 }`}
                             aria-current={activeTab === tab.id ? 'page' : undefined}
@@ -230,7 +230,7 @@ export const PromotionHubPage: React.FC = () => {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: i * 0.1 }}
-                                        className={`p-6 rounded-2xl bg-gradient-to-br ${stat.color} text-white shadow-lg`}
+                                        className={`p-6 rounded-2xl bg-gradient-to-br ${stat.color} text-white`}
                                     >
                                         <div className="flex items-center justify-between mb-4">
                                             <p className="text-white/80 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
@@ -278,7 +278,7 @@ export const PromotionHubPage: React.FC = () => {
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.1 }}
                                             onClick={() => openCampaign(campaign.id)}
-                                            className="w-full text-left bg-card border border-border rounded-2xl p-5 hover:border-[#0071e3]/30 hover:shadow-md transition-all group active:scale-[0.99]"
+                                            className="w-full text-left bg-card border border-border rounded-2xl p-5 hover:border-[#0071e3]/30 transition-all group active:scale-[0.99]"
                                             aria-label={`View ${campaign.name}`}
                                         >
                                             <div className="flex justify-between items-center">
@@ -425,7 +425,7 @@ export const PromotionHubPage: React.FC = () => {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="bg-card border border-border rounded-2xl p-5 hover:border-[#0071e3]/30 hover:shadow-md transition-all group"
+                                        className="bg-card border border-border rounded-2xl p-5 hover:border-[#0071e3]/30 transition-all group"
                                     >
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                             <div className="flex items-center gap-4">

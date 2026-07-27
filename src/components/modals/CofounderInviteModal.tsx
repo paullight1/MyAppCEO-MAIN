@@ -13,6 +13,7 @@ interface CofounderInviteModalProps {
 
 const ROLES = [
   { id: 'co_founder', label: 'Co-Founder' },
+  { id: 'ceo', label: 'CEO' },
   { id: 'early_employee', label: 'Early Employee' },
   { id: 'advisor', label: 'Advisor' },
 ];
@@ -167,10 +168,10 @@ export const CofounderInviteModal: React.FC<CofounderInviteModalProps> = ({ isOp
 
           <div>
             <label className="text-sm font-bold text-foreground mb-1.5 block">Role</label>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {ROLES.map(r => (
                 <button key={r.id} type="button" onClick={() => { setRole(r.id); setError(''); }}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all border ${role === r.id ? 'border-accent bg-accent/10 text-accent' : 'border-border text-muted-foreground hover:border-accent/50'}`}>
+                  className={`py-2.5 rounded-xl text-sm font-medium transition-all border ${role === r.id ? 'border-accent bg-accent/10 text-accent' : 'border-border text-muted-foreground hover:border-accent/50'}`}>
                   {r.label}
                 </button>
               ))}

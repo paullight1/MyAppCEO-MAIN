@@ -38,7 +38,7 @@ export const CommunityStarsPage: React.FC = () => {
                 </Link>
 
                 <div className="text-center py-8">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl shadow-lg mb-4">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl mb-4">
                         <Crown size={40} className="text-white" aria-hidden="true" />
                     </div>
                     <h1 className="text-3xl font-bold text-foreground mb-2">Community Stars</h1>
@@ -81,7 +81,7 @@ export const CommunityStarsPage: React.FC = () => {
                                                 )}
                                             </div>
 
-                                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white font-bold text-xl shadow-md flex-shrink-0">
+                                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-violet-600 flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
                                                 {stat.user?.fullName?.[0] || '?'}
                                             </div>
 

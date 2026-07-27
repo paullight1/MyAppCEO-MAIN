@@ -143,7 +143,6 @@ export function SubmissionOptions({
                                         className={`
                                             relative p-5 rounded-xl border-2 bg-card text-left transition-all
                                             ${option.borderColor} ${option.hoverBorder}
-                                            hover:shadow-lg hover:shadow-accent/5
                                             ${isSelected ? 'ring-2 ring-accent ring-offset-2 ring-offset-background' : ''}
                                             group
                                         `}

@@ -351,17 +351,17 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ appId, connectedAccoun
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <button onClick={socialHub.onOpenVideoModal} className="p-5 bg-white dark:bg-[#1e1e20] border border-[#1d1d1f]/8 dark:border-white/8 rounded-xl hover:border-[#0071e3]/30 hover:shadow-md transition-all text-left group active:scale-[0.99]">
+                <button onClick={socialHub.onOpenVideoModal} className="p-5 bg-white dark:bg-[#1e1e20] border border-[#1d1d1f]/8 dark:border-white/8 rounded-xl hover:border-[#0071e3]/30 transition-all text-left group active:scale-[0.99]">
                     <div className="w-10 h-10 rounded-lg bg-[#0071e3]/10 flex items-center justify-center mb-3"><GroupHoverIcon icon={Video} size={20} animation="scale" className="text-[#0071e3]" /></div>
                     <h4 className="text-sm font-bold text-[#1d1d1f] dark:text-white mb-0.5">Upload Video</h4>
                     <p className="text-xs text-[#1d1d1f]/40 dark:text-white/40">Post a video to connected accounts</p>
                 </button>
-                <button onClick={socialHub.onOpenScheduleModal} className="p-5 bg-white dark:bg-[#1e1e20] border border-[#1d1d1f]/8 dark:border-white/8 rounded-xl hover:border-[#0071e3]/30 hover:shadow-md transition-all text-left group active:scale-[0.99]">
+                <button onClick={socialHub.onOpenScheduleModal} className="p-5 bg-white dark:bg-[#1e1e20] border border-[#1d1d1f]/8 dark:border-white/8 rounded-xl hover:border-[#0071e3]/30 transition-all text-left group active:scale-[0.99]">
                     <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-3"><GroupHoverIcon icon={CalendarDays} size={20} animation="scale" className="text-blue-500" /></div>
                     <h4 className="text-sm font-bold text-[#1d1d1f] dark:text-white mb-0.5">Schedule Post</h4>
                     <p className="text-xs text-[#1d1d1f]/40 dark:text-white/40">Plan content for later</p>
                 </button>
-                <button onClick={() => navigate('/promote/creators')} className="p-5 bg-white dark:bg-[#1e1e20] border border-[#1d1d1f]/8 dark:border-white/8 rounded-xl hover:border-[#0071e3]/30 hover:shadow-md transition-all text-left group active:scale-[0.99]">
+                <button onClick={() => navigate('/promote/creators')} className="p-5 bg-white dark:bg-[#1e1e20] border border-[#1d1d1f]/8 dark:border-white/8 rounded-xl hover:border-[#0071e3]/30 transition-all text-left group active:scale-[0.99]">
                     <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center mb-3"><GroupHoverIcon icon={Users} size={20} animation="scale" className="text-purple-500" /></div>
                     <h4 className="text-sm font-bold text-[#1d1d1f] dark:text-white mb-0.5">Hire Creators</h4>
                     <p className="text-xs text-[#1d1d1f]/40 dark:text-white/40">Launch UGC campaigns with talent</p>

@@ -188,7 +188,7 @@ export const AdminNotificationPage: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Compose Panel */}
                         <div className="lg:col-span-2 space-y-6">
-                            <div className="bg-card rounded-2xl border border-border shadow-sm p-8">
+                            <div className="bg-card rounded-2xl border border-border p-8">
                                 <h2 className="text-lg font-bold text-foreground mb-6">Compose Notification</h2>
 
                                 {/* Target */}
@@ -381,7 +381,7 @@ export const AdminNotificationPage: React.FC = () => {
 
                         {/* Preview Panel */}
                         <div className="space-y-6">
-                            <div className="bg-card rounded-2xl border border-border shadow-sm p-8 sticky top-24">
+                            <div className="bg-card rounded-2xl border border-border p-8 sticky top-24">
                                 <h2 className="text-lg font-bold text-foreground mb-4">Preview</h2>
                                 <div className="bg-muted rounded-xl p-4 space-y-3">
                                     <div className="flex items-start gap-3">
@@ -434,7 +434,7 @@ export const AdminNotificationPage: React.FC = () => {
                     </div>
                 ) : (
                     /* Notification History */
-                    <div className="bg-card rounded-2xl border border-border shadow-sm">
+                    <div className="bg-card rounded-2xl border border-border">
                         <div className="p-6 border-b border-border">
                             <h2 className="text-lg font-bold text-foreground">Sent Notifications</h2>
                             <p className="text-sm text-muted-foreground mt-1">Recent notifications sent to users</p>

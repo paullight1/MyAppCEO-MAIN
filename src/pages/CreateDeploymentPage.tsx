@@ -79,7 +79,7 @@ export const CreateDeploymentPage: React.FC = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-card rounded-[2rem] border border-border shadow-xl shadow-black/5 p-8 relative overflow-hidden"
+                    className="bg-card rounded-[2rem] border border-border p-8 relative overflow-hidden"
                 >
                     {/* Decorative Effects */}
                     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-accent/5 rounded-full blur-3xl opacity-50 pointer-events-none" />
@@ -153,7 +153,7 @@ export const CreateDeploymentPage: React.FC = () => {
                                     onChange={(e) => setFormData(prev => ({ ...prev, version: e.target.value }))}
                                     placeholder="e.g. 1.0.0"
                                     required
-                                    className="w-full px-5 py-3.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all shadow-sm"
+                                    className="w-full px-5 py-3.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all"
                                 />
                             </div>
                             <div>
@@ -167,7 +167,7 @@ export const CreateDeploymentPage: React.FC = () => {
                                     placeholder="e.g. 42"
                                     required
                                     min="1"
-                                    className="w-full px-5 py-3.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all shadow-sm"
+                                    className="w-full px-5 py-3.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all"
                                 />
                             </div>
                         </div>
@@ -183,7 +183,7 @@ export const CreateDeploymentPage: React.FC = () => {
                                     value={formData.storeUrl}
                                     onChange={(e) => setFormData(prev => ({ ...prev, storeUrl: e.target.value }))}
                                     placeholder={selectedPlatform?.placeholder}
-                                    className="w-full pl-12 pr-5 py-3.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all shadow-sm"
+                                    className="w-full pl-12 pr-5 py-3.5 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all"
                                 />
                             </div>
                             <p className="text-xs text-muted-foreground mt-2 font-medium">Optional: Where can users download this build?</p>
@@ -198,7 +198,7 @@ export const CreateDeploymentPage: React.FC = () => {
                                 onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
                                 placeholder="Describe what's new in this release..."
                                 rows={4}
-                                className="w-full px-5 py-4 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all shadow-sm resize-none"
+                                className="w-full px-5 py-4 bg-card border border-border rounded-xl focus:ring-2 focus:ring-accent/20 focus:border-accent outline-none font-medium transition-all resize-none"
                             />
                         </div>
 
@@ -213,7 +213,7 @@ export const CreateDeploymentPage: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={loading || !formData.version || !formData.buildNumber}
-                                className="w-full sm:flex-1 px-8 py-3.5 bg-accent text-white rounded-xl hover:bg-accent/90 disabled:opacity-50 flex items-center justify-center gap-2 font-bold shadow-lg hover:shadow-accent/40 transition-all"
+                                className="w-full sm:flex-1 px-8 py-3.5 bg-accent text-white rounded-xl hover:bg-accent/90 disabled:opacity-50 flex items-center justify-center gap-2 font-bold transition-all"
                             >
                                 {loading ? (
                                     <>

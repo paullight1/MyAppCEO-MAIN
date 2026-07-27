@@ -127,7 +127,7 @@ export const BrowsePage: React.FC = () => {
                                     <Link
                                         to={hub.link}
                                         key={hub.title}
-                                        className="group flex min-h-[260px] flex-col rounded-2xl border border-border bg-card p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                        className="group flex min-h-[260px] flex-col rounded-2xl border border-border bg-card p-8 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                     >
                                         <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                                             <Icon size={24} />
@@ -232,7 +232,7 @@ export const BrowsePage: React.FC = () => {
                                 const Icon = item.icon;
                                 return (
                                     <div key={item.title} className="flex gap-5">
-                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-card shadow-sm">
+                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-card">
                                             <Icon className={item.tone} size={22} />
                                         </div>
                                         <div>

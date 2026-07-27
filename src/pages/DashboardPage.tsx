@@ -25,6 +25,9 @@ import {
     HelpCircle,
     FileText,
     LineChart,
+    CheckCircle2,
+    ShieldCheck,
+    type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useUserStatus } from '../hooks/useUserStatus';
@@ -224,7 +227,7 @@ export const DashboardPage: React.FC = () => {
                             <WorkspaceStartGrid options={firstRunOptions} />
                         </div>
 
-                        <aside className="rounded-[32px] border border-border bg-card p-8 shadow-sm">
+                        <aside className="rounded-[32px] border border-border bg-card p-8">
                             <div className="space-y-2">
                                 <p className="text-xs font-bold uppercase tracking-[0.28em] text-muted-foreground">Controlled setup</p>
                                 <h2 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -256,109 +259,139 @@ export const DashboardPage: React.FC = () => {
         );
     }
 
-    const primaryActions = [
+    const revenueValue = mrr
+        ? new Intl.NumberFormat(undefined, {
+              style: 'currency',
+              currency: mrr.currency.toUpperCase(),
+              maximumFractionDigits: 0,
+          }).format(mrr.total)
+        : formatCurrency(0, { maximumFractionDigits: 0 });
+
+    // ── Priority goals ────────────────────────────────────────────────────
+    // A real setup/health checklist derived from the user's actual state. Each
+    // goal is either detectably done or an actionable next step. Incomplete,
+    // higher-priority goals float to the top; completed ones collapse to a
+    // compact "done" row so progress stays visible without adding noise.
+    type Priority = 1 | 2 | 3;
+    interface PriorityGoal {
+        id: string;
+        title: string;
+        description: string;
+        icon: LucideIcon;
+        accent: string; // icon foreground token
+        accentBg: string; // icon surface token
+        cta: string;
+        onAction: () => void;
+        done: boolean;
+        priority: Priority;
+    }
+
+    const goals: PriorityGoal[] = [
         {
-            title: 'Add My App',
-            description: 'Import an existing app, website, SaaS, or software product you already manage.',
+            id: 'verify',
+            title: 'Verify your account',
+            description: 'Complete KYC to unlock withdrawals and payouts.',
+            icon: ShieldCheck,
+            accent: 'text-amber-500',
+            accentBg: 'bg-amber-500/10',
+            cta: 'Verify now',
+            onAction: () => navigate('/settings?tab=kyc'),
+            done: isVerified,
+            priority: 1,
+        },
+        {
+            id: 'app',
+            title: 'Add your first app',
+            description: 'Import a live app or start a new build to open a workspace.',
             icon: UploadCloud,
-            color: 'bg-primary',
-            iconSurface: 'bg-white/18 text-white ring-1 ring-white/24',
-            textColor: 'text-white',
-            onClick: () => navigate('/apps/new?mode=connect'),
+            accent: 'text-primary',
+            accentBg: 'bg-primary/10',
+            cta: 'Add app',
+            onAction: () => navigate('/apps/new?mode=connect'),
+            done: totalApps > 0,
+            priority: 1,
         },
         {
-            title: 'Start New Idea',
-            description: 'Create a new product idea and turn it into a structured app project.',
-            icon: Rocket,
-            path: '/ideas/new',
-            color: 'bg-gradient-to-br from-primary to-primary/70',
-            iconSurface: 'bg-white/18 text-white ring-1 ring-white/24',
-            textColor: 'text-white',
-        },
-        {
-            title: 'Browse Campaigns',
-            description: 'Discover investment opportunities',
+            id: 'revenue',
+            title: 'Connect revenue tracking',
+            description: 'Link Stripe to see MRR and active subscriptions here.',
             icon: TrendingUp,
-            path: '/campaigns',
-            color: 'bg-gradient-to-br from-emerald-500 to-emerald-600',
-            iconSurface: 'bg-white/18 text-white ring-1 ring-white/24',
-            textColor: 'text-white',
+            accent: 'text-emerald-500',
+            accentBg: 'bg-emerald-500/10',
+            cta: 'Connect Stripe',
+            onAction: () => navigate('/connections'),
+            done: !!mrr,
+            priority: 2,
+        },
+        {
+            id: 'idea',
+            title: 'Capture an idea',
+            description: 'Turn a concept into a structured, buildable app project.',
+            icon: Lightbulb,
+            accent: 'text-amber-500',
+            accentBg: 'bg-amber-500/10',
+            cta: 'New idea',
+            onAction: () => navigate('/ideas/new'),
+            done: ideasCount > 0,
+            priority: 2,
+        },
+        {
+            id: 'team',
+            title: 'Build your team',
+            description: 'Invite a co-founder and split equity on an app you own.',
+            icon: UsersRound,
+            accent: 'text-blue-500',
+            accentBg: 'bg-blue-500/10',
+            cta: 'Invite co-founder',
+            onAction: () => navigate(cofounderPath),
+            done: cofoundedApps.length > 0,
+            priority: 3,
+        },
+        {
+            id: 'legal',
+            title: 'Set up your legal entity',
+            description: 'Protect yourself and co-founders with proper structure.',
+            icon: Scale,
+            accent: 'text-rose-500',
+            accentBg: 'bg-rose-500/10',
+            cta: 'Set up entity',
+            onAction: () => navigate('/legal'),
+            done: campaignsCount > 0, // proxy: users who run campaigns have entities set up
+            priority: 3,
         },
     ];
 
-    const overviewCards = [
-        {
-            title: 'Monthly Revenue',
-            value: mrr
-                ? new Intl.NumberFormat(undefined, {
-                      style: 'currency',
-                      currency: mrr.currency.toUpperCase(),
-                      maximumFractionDigits: 0,
-                  }).format(mrr.total)
-                : formatCurrency(0, { maximumFractionDigits: 0 }),
-            subtitle: mrr
-                ? `${mrr.active} active ${mrr.active === 1 ? 'subscription' : 'subscriptions'}`
-                : 'Connect Stripe to track',
-            icon: TrendingUp,
-            path: '/finances',
-            color: 'text-emerald-500',
-            bgIcon: 'bg-emerald-500/10',
-        },
-        {
-            title: 'My Ideas',
-            value: formatNumber(ideasCount),
-            subtitle: `${ideasCount === 0 ? 'Start your first' : 'In progress'}`,
-            icon: Lightbulb,
-            path: '/my-ideas',
-            color: 'text-amber-500',
-            bgIcon: 'bg-amber-500/10',
-        },
-        {
-            title: 'My Campaigns',
-            value: formatNumber(campaignsCount),
-            subtitle: `${activeCampaigns} active`,
-            icon: Target,
-            path: '/my-campaigns',
-            color: 'text-emerald-500',
-            bgIcon: 'bg-emerald-500/10',
-        },
-        {
-            title: 'Portfolio',
-            value: formatNumber(shareholderApps.length),
-            subtitle: shareholderApps.length === 1 ? 'Investment held' : 'Investments held',
-            icon: PieChart,
-            path: '/portfolio',
-            color: 'text-blue-500',
-            bgIcon: 'bg-blue-500/10',
-        },
-        {
-            title: 'My Apps',
-            value: formatNumber(totalApps),
-            subtitle: `${ownedApps.length} owned`,
-            icon: FolderKanban,
-            path: '/apps',
-            color: 'text-violet-500',
-            bgIcon: 'bg-violet-500/10',
-        },
-        {
-            title: 'Team & Ownership',
-            value: formatNumber(cofoundedApps.length),
-            subtitle: 'Co-founded apps',
-            icon: UsersRound,
-            path: '/apps',
-            color: 'text-cyan-500',
-            bgIcon: 'bg-cyan-500/10',
-        },
-        {
-            title: 'Legal & Licenses',
-            value: '—',
-            subtitle: 'Manage entity & licenses',
-            icon: Scale,
-            path: '/legal',
-            color: 'text-rose-500',
-            bgIcon: 'bg-rose-500/10',
-        },
+    const completedGoals = goals.filter((g) => g.done).length;
+    const goalProgress = Math.round((completedGoals / goals.length) * 100);
+    const openGoals = goals
+        .filter((g) => !g.done)
+        .sort((a, b) => a.priority - b.priority);
+    const doneGoals = goals.filter((g) => g.done);
+
+    const priorityLabel: Record<Priority, string> = { 1: 'Critical', 2: 'Recommended', 3: 'Optional' };
+    const priorityPill: Record<Priority, string> = {
+        1: 'bg-rose-500/10 text-rose-500',
+        2: 'bg-primary/10 text-primary',
+        3: 'bg-muted text-muted-foreground',
+    };
+
+    // ── Compact metrics + role metadata ───────────────────────────────────
+    const metrics = [
+        { label: 'Revenue', value: revenueValue, sub: mrr ? `${mrr.active} active` : 'Not connected', icon: TrendingUp, color: 'text-emerald-500', path: '/finances' },
+        { label: 'Apps', value: formatNumber(totalApps), sub: `${ownedApps.length} owned`, icon: FolderKanban, color: 'text-violet-500', path: '/apps' },
+        { label: 'Ideas', value: formatNumber(ideasCount), sub: ideasCount === 0 ? 'None yet' : 'In progress', icon: Lightbulb, color: 'text-amber-500', path: '/my-ideas' },
+        { label: 'Campaigns', value: formatNumber(campaignsCount), sub: `${activeCampaigns} active`, icon: Target, color: 'text-blue-500', path: '/my-campaigns' },
+        { label: 'Portfolio', value: formatNumber(shareholderApps.length), sub: shareholderApps.length === 1 ? 'Investment' : 'Investments', icon: PieChart, color: 'text-cyan-500', path: '/portfolio' },
     ];
+
+    type RoleMeta = { label: string; icon: LucideIcon; accent: string; accentBg: string };
+    const roleMeta: Partial<Record<UserAppMembership['role'], RoleMeta>> = {
+        owner: { label: 'Owner', icon: Crown, accent: 'text-amber-500', accentBg: 'bg-amber-500/10' },
+        cofounder: { label: 'Co-founder', icon: UsersRound, accent: 'text-blue-500', accentBg: 'bg-blue-500/10' },
+        shareholder: { label: 'Investor', icon: Briefcase, accent: 'text-emerald-500', accentBg: 'bg-emerald-500/10' },
+    };
+    const defaultRoleMeta: RoleMeta = { label: 'Member', icon: FolderKanban, accent: 'text-primary', accentBg: 'bg-primary/10' };
+
     const workspaceLinks = [
         { label: 'Apps', path: '/apps', icon: FolderKanban },
         { label: 'Ideas', path: '/my-ideas', icon: Lightbulb },
@@ -377,61 +410,46 @@ export const DashboardPage: React.FC = () => {
 
     return (
         <DashboardLayout>
-            <div className="max-w-6xl mx-auto py-8 space-y-8">
-                {/* Welcome Header */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="mx-auto max-w-6xl space-y-6 py-8">
+                {/* Header */}
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-foreground">
                             Welcome back, {profile?.fullName || user?.email?.split('@')[0] || 'there'}
                         </h1>
-                        <p className="text-muted-foreground mt-1">
+                        <p className="mt-1 text-muted-foreground">
                             Manage existing apps, shape new ideas, and track ownership from one place.
                         </p>
                     </div>
-                </div>
-
-                {/* Verification Banner */}
-                {!isVerified && !profileLoading && (
-                    <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-amber-500/20 rounded-xl">
-                                <AlertCircle className="w-6 h-6 text-amber-600" />
-                            </div>
-                            <div>
-                                <h3 className="font-semibold text-amber-800 dark:text-amber-200">Complete your profile</h3>
-                                <p className="text-sm text-amber-700 dark:text-amber-300">
-                                    Verify your account to unlock withdrawals.
-                                </p>
-                            </div>
-                        </div>
-                        <Button
-                            onClick={() => navigate('/settings?tab=kyc')}
-                            className="bg-amber-600 text-white hover:bg-amber-700"
-                        >
-                            Verify Now
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => navigate('/ideas/new')} className="gap-2">
+                            <Rocket className="h-4 w-4" /> New idea
+                        </Button>
+                        <Button onClick={() => navigate('/apps/new?mode=connect')} className="gap-2">
+                            <UploadCloud className="h-4 w-4" /> Add app
                         </Button>
                     </div>
-                )}
+                </div>
 
-                {/* Pending Shareholder Requests */}
+                {/* Urgent: pending shareholder requests */}
                 {pendingRequests.length > 0 && (
-                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-5">
-                        <div className="flex items-center gap-3 mb-3">
+                    <div className="rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5">
+                        <div className="mb-3 flex items-center gap-3">
                             <Briefcase size={18} className="text-blue-600 dark:text-blue-400" />
                             <h3 className="text-sm font-bold text-blue-800 dark:text-blue-200">
-                                Pending Shareholder Applications ({pendingRequests.length})
+                                Pending shareholder applications ({pendingRequests.length})
                             </h3>
                         </div>
                         <div className="space-y-2">
                             {pendingRequests.slice(0, 3).map((req: any) => (
-                                <div key={req.id} className="flex items-center justify-between p-3 bg-card rounded-xl border border-blue-500/10">
+                                <div key={req.id} className="flex items-center justify-between rounded-xl border border-blue-500/10 bg-card px-4 py-3">
                                     <div>
                                         <p className="text-sm font-bold text-foreground">{req.listing?.name || 'App Investment'}</p>
                                         <p className="text-xs text-muted-foreground">
                                             {req.shares_requested} shares • {req.total_investment != null ? formatCurrency(req.total_investment, { maximumFractionDigits: 0 }) : 'TBD'}
                                         </p>
                                     </div>
-                                    <span className="px-2 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-md text-[10px] font-bold border border-amber-500/20">
+                                    <span className="rounded-md bg-amber-500/10 px-2 py-1 text-[10px] font-bold text-amber-600 dark:text-amber-400">
                                         Pending
                                     </span>
                                 </div>
@@ -440,7 +458,71 @@ export const DashboardPage: React.FC = () => {
                     </div>
                 )}
 
-                {/* Contextual Hints */}
+                {/* ── Priority goals ─────────────────────────────────────── */}
+                <section className="rounded-2xl border border-border bg-card p-6">
+                    <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h2 className="flex items-center gap-2 text-base font-bold text-foreground">
+                                <Target className="h-4 w-4 text-primary" /> Priority goals
+                            </h2>
+                            <p className="mt-0.5 text-sm text-muted-foreground">
+                                {openGoals.length === 0
+                                    ? 'All set — your workspace is fully configured.'
+                                    : `${openGoals.length} step${openGoals.length === 1 ? '' : 's'} left to get the most out of your workspace.`}
+                            </p>
+                        </div>
+                        <div className="sm:w-52">
+                            <div className="mb-1 flex items-center justify-between text-xs font-semibold text-muted-foreground">
+                                <span>Setup progress</span>
+                                <span className="text-foreground">{completedGoals}/{goals.length}</span>
+                            </div>
+                            <div className="h-2 overflow-hidden rounded-full bg-muted">
+                                <div
+                                    className="h-full rounded-full bg-primary transition-all duration-500"
+                                    style={{ width: `${goalProgress}%` }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {openGoals.length > 0 && (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            {openGoals.map((goal) => (
+                                <div key={goal.id} className="flex flex-col rounded-xl border border-border bg-background p-4">
+                                    <div className="mb-3 flex items-center justify-between">
+                                        <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${goal.accentBg}`}>
+                                            <goal.icon className={`h-5 w-5 ${goal.accent}`} />
+                                        </div>
+                                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${priorityPill[goal.priority]}`}>
+                                            {priorityLabel[goal.priority]}
+                                        </span>
+                                    </div>
+                                    <h3 className="text-sm font-bold text-foreground">{goal.title}</h3>
+                                    <p className="mt-1 flex-1 text-xs leading-5 text-muted-foreground">{goal.description}</p>
+                                    <button
+                                        type="button"
+                                        onClick={goal.onAction}
+                                        className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary transition hover:gap-2"
+                                    >
+                                        {goal.cta} <ArrowRight className="h-3.5 w-3.5" />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {doneGoals.length > 0 && (
+                        <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
+                            {doneGoals.map((goal) => (
+                                <span key={goal.id} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                                    <CheckCircle2 className="h-3.5 w-3.5" /> {goal.title}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+                </section>
+
+                {/* Contextual hints (dismissible) */}
                 <div className="space-y-3">
                     <OnboardingHint
                         hintKey="dashboard-invite-cofounder"
@@ -449,16 +531,80 @@ export const DashboardPage: React.FC = () => {
                         actionLabel="Invite Co-founder"
                         onAction={() => navigate(cofounderPath)}
                     />
-                    <OnboardingHint
-                        hintKey="dashboard-setup-legal"
-                        title="Set up your legal entity"
-                        description="Protect yourself and your co-founders with proper legal structure."
-                        actionLabel="Set Up Entity"
-                        onAction={() => navigate('/legal')}
-                    />
                 </div>
 
-                <section className="rounded-2xl bg-card p-4 shadow-sm">
+                {/* ── Metrics strip ──────────────────────────────────────── */}
+                <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                    {metrics.map((m) => (
+                        <Link
+                            key={m.label}
+                            to={m.path}
+                            className="group rounded-2xl border border-border bg-card p-4 transition hover:border-primary/40"
+                        >
+                            <div className="mb-3 flex items-center justify-between">
+                                <m.icon className={`h-4 w-4 ${m.color}`} />
+                                <ChevronRight className="h-4 w-4 text-muted-foreground transition group-hover:text-primary" />
+                            </div>
+                            <p className="text-xl font-bold text-foreground">{m.value}</p>
+                            <p className="text-xs font-semibold text-foreground">{m.label}</p>
+                            <p className="text-[11px] text-muted-foreground">{m.sub}</p>
+                        </Link>
+                    ))}
+                </section>
+
+                {/* ── Your apps (real overview) ──────────────────────────── */}
+                <section className="rounded-2xl border border-border bg-card p-6">
+                    <div className="mb-4 flex items-center justify-between">
+                        <h2 className="flex items-center gap-2 text-base font-bold text-foreground">
+                            <FolderKanban className="h-4 w-4 text-primary" /> Your apps
+                        </h2>
+                        <Link to="/apps" className="flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+                            View all <ChevronRight size={12} />
+                        </Link>
+                    </div>
+
+                    {allApps.length === 0 ? (
+                        <EmptyState
+                            size="sm"
+                            icon={FolderKanban}
+                            title="No apps yet"
+                            description="Add an existing app or start a new idea to open your first workspace."
+                            action={{ label: 'Add app', onClick: () => navigate('/apps/new') }}
+                        />
+                    ) : (
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            {allApps.map((app) => {
+                                const meta = roleMeta[app.role] ?? defaultRoleMeta;
+                                return (
+                                    <Link
+                                        key={`${app.role}-${app.app_id}`}
+                                        to={`/apps/${app.app_id}/dashboard`}
+                                        className="group flex items-center gap-3 rounded-xl border border-border bg-background p-4 transition hover:border-primary/40"
+                                    >
+                                        <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${meta.accentBg}`}>
+                                            <meta.icon className={`h-5 w-5 ${meta.accent}`} />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="truncate text-sm font-bold text-foreground">{app.app_name}</p>
+                                            <p className="text-[11px] text-muted-foreground">
+                                                {meta.label}
+                                                {app.role === 'shareholder' && app.equity_pct != null
+                                                    ? ` • ${app.equity_pct}% stake`
+                                                    : app.app_category
+                                                        ? ` • ${app.app_category}`
+                                                        : ''}
+                                            </p>
+                                        </div>
+                                        <ChevronRight size={16} className="shrink-0 text-muted-foreground transition group-hover:text-primary" />
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    )}
+                </section>
+
+                {/* ── Quick navigation ───────────────────────────────────── */}
+                <section className="rounded-2xl border border-border bg-card p-4">
                     <div className="mb-3 flex items-center justify-between gap-3">
                         <h2 className="text-sm font-bold text-foreground">Jump to workspace</h2>
                         <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Fast navigation</span>
@@ -477,181 +623,12 @@ export const DashboardPage: React.FC = () => {
                     </div>
                 </section>
 
-                {/* Primary Actions */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {primaryActions.map((action, i) => {
-                        const content = (
-                            <>
-                                <div className="absolute inset-x-0 top-0 h-px bg-white/35" />
-                                <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-2xl ${action.iconSurface}`}>
-                                    <action.icon className="w-7 h-7" />
-                                </div>
-                                <h3 className="text-lg font-black tracking-normal">{action.title}</h3>
-                                <p className="mt-1 max-w-[28ch] text-sm font-medium leading-5 text-white/84">{action.description}</p>
-                                <ArrowRight className="absolute right-5 top-5 h-5 w-5 text-white/70 transition-transform group-hover:translate-x-0.5" />
-                            </>
-                        );
-
-                        const className = `${action.color} ${action.textColor} group relative min-h-[168px] overflow-hidden rounded-2xl p-6 text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:translate-y-0 active:scale-[0.98]`;
-
-                        return action.path ? (
-                            <Link key={i} to={action.path} className={className}>
-                                {content}
-                            </Link>
-                        ) : (
-                            <button key={i} type="button" onClick={action.onClick} className={className}>
-                                {content}
-                            </button>
-                        );
-                    })}
-                </div>
-
-                {/* Role-Based Portfolio Sections */}
-                {(ownedApps.length > 0 || cofoundedApps.length > 0 || shareholderApps.length > 0) && (
-                    <div className="space-y-6">
-                        {/* My Apps (Owner) */}
-                        {ownedApps.length > 0 && (
-                            <div className="bg-card rounded-2xl p-6 shadow-sm">
-                                <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
-                                        <Crown size={16} className="text-amber-500" /> My Apps (Owner)
-                                    </h2>
-                                    <Link to="/apps" className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
-                                        View All <ChevronRight size={12} />
-                                    </Link>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                    {ownedApps.map((app) => (
-                                        <Link key={app.app_id} to={`/apps/${app.app_id}/dashboard`} className="p-4 bg-muted rounded-xl shadow-sm hover:bg-muted/70 transition-all group">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                                                    <Crown size={16} className="text-amber-500" />
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-bold text-foreground">{app.app_name}</p>
-                                                    <p className="text-[10px] text-muted-foreground">{app.app_category}</p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Co-Founded */}
-                        {cofoundedApps.length > 0 && (
-                            <div className="bg-card rounded-2xl p-6 shadow-sm">
-                                <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
-                                        <UsersRound size={16} className="text-blue-500" /> Co-Founded
-                                    </h2>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                    {cofoundedApps.map((app) => (
-                                        <Link key={app.app_id} to={`/apps/${app.app_id}/dashboard`} className="p-4 bg-muted rounded-xl shadow-sm hover:bg-muted/70 transition-all group">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                                                    <UsersRound size={16} className="text-blue-500" />
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-bold text-foreground">{app.app_name}</p>
-                                                    <p className="text-[10px] text-muted-foreground">{app.app_category}</p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* My Investments (Shareholder) */}
-                        {shareholderApps.length > 0 && (
-                            <div className="bg-card rounded-2xl p-6 shadow-sm">
-                                <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
-                                        <Briefcase size={16} className="text-emerald-500" /> My Investments
-                                    </h2>
-                                    <Link to="/my-investments" className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
-                                        View All <ChevronRight size={12} />
-                                    </Link>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                    {shareholderApps.map((app) => (
-                                        <Link key={app.app_id} to={`/apps/${app.app_id}/dashboard`} className="p-4 bg-muted rounded-xl shadow-sm hover:bg-muted/70 transition-all group">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                                                    <Briefcase size={16} className="text-emerald-500" />
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-bold text-foreground">{app.app_name}</p>
-                                                    <p className="text-[10px] text-muted-foreground">{app.equity_pct}% stake</p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                <section className="grid grid-cols-1 gap-4 lg:grid-cols-[1.35fr_0.65fr]">
-                    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                        {overviewCards.map((card, i) => (
-                            <Link
-                                key={i}
-                                to={card.path}
-                                className={`${i === 0 ? 'md:col-span-2' : ''} bg-card rounded-2xl p-4 shadow-sm hover:bg-muted transition-all group`}
-                            >
-                                <div className="mb-5 flex items-center justify-between">
-                                    <div className={`w-10 h-10 rounded-xl ${card.bgIcon} flex items-center justify-center group-hover:scale-105 transition-transform`}>
-                                        <card.icon className={`w-5 h-5 ${card.color}`} />
-                                    </div>
-                                    <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
-                                </div>
-                                <p className="text-2xl font-bold text-foreground">{card.value}</p>
-                                <p className="text-sm font-semibold text-foreground mt-1">{card.title}</p>
-                                <p className="text-xs text-muted-foreground">{card.subtitle}</p>
-                            </Link>
-                        ))}
-                    </div>
-                    <div className="rounded-2xl bg-card p-5 shadow-sm">
-                        <div className="mb-4 flex items-center justify-between">
-                            <h2 className="text-sm font-bold text-foreground">My apps</h2>
-                            <Button variant="ghost" size="sm" onClick={() => navigate('/apps/new')} className="text-primary hover:text-primary">
-                                Add app
-                            </Button>
-                        </div>
-                        {allApps.length === 0 ? (
-                            <EmptyState
-                                size="sm"
-                                icon={FolderKanban}
-                                title="No apps added yet"
-                                description="Add an existing app or start a new idea."
-                                action={{ label: 'Add app', onClick: () => navigate('/apps/new') }}
-                            />
-                        ) : (
-                            <div className="space-y-2">
-                                {allApps.slice(0, 4).map((app) => (
-                                    <Link key={`${app.role}-${app.app_id}`} to={`/apps/${app.app_id}/dashboard`} className="flex items-center justify-between rounded-xl bg-muted px-3 py-3 transition hover:bg-primary/10">
-                                        <div>
-                                            <p className="text-sm font-semibold text-foreground">{app.app_name}</p>
-                                            <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{app.role} / {app.app_category || 'App'}</p>
-                                        </div>
-                                        <ChevronRight size={15} className="text-primary" />
-                                    </Link>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </section>
-
-                {/* Recent Activity */}
-                <section className="bg-card rounded-2xl p-6 shadow-sm">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-primary" />
-                            Recent Activity
+                {/* ── Recent activity ────────────────────────────────────── */}
+                <section className="rounded-2xl border border-border bg-card p-6">
+                    <div className="mb-6 flex items-center justify-between">
+                        <h2 className="flex items-center gap-2 text-base font-bold text-foreground">
+                            <Clock className="h-4 w-4 text-primary" />
+                            Recent activity
                         </h2>
                         <Link to="/analytics" className="text-xs font-bold text-primary hover:underline">
                             View analytics

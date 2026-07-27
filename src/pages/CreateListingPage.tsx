@@ -41,6 +41,7 @@ import {
   parseStoreAppReference,
   storeSourceLabel,
 } from "../utils/storeImport";
+import { lookupAppleApp, searchAppleApps } from "../utils/appleCatalog";
 
 const CATEGORIES = [
   { name: "SaaS", icon: Zap },
@@ -148,6 +149,7 @@ export const CreateListingPage: React.FC = () => {
   const [storeImportPlatform, setStoreImportPlatform] =
     useState<Exclude<StorePlatform, "all">>("ios");
   const [storeImportError, setStoreImportError] = useState<string | null>(null);
+  const [showStoreImport, setShowStoreImport] = useState(true);
   const [importedStoreApp, setImportedStoreApp] =
     useState<ExternalStoreApp | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -319,13 +321,27 @@ export const CreateListingPage: React.FC = () => {
   ) => {
     setStoreImportError(null);
     const result = await getExternalApp(platform, id, country);
-    const app = result?.data?.data;
+    let app = result?.data?.data ?? null;
+
+    if (!app && platform === "ios") {
+      try {
+        app = await lookupAppleApp(id, country);
+      } catch {
+        app = null;
+      }
+    }
 
     if (app) {
       applyStoreApp(app);
+    } else if (result?.success === false) {
+      setStoreImportError(
+        platform === "android"
+          ? "The store import service is unreachable right now. You can skip this and fill in the details manually below."
+          : "The store lookup failed. You can skip this and fill in the details manually below.",
+      );
     } else {
       setStoreImportError(
-        "No app metadata was returned for that store reference.",
+        "No app metadata was returned for that store reference. You can skip this and fill in the details manually below.",
       );
     }
   };
@@ -354,11 +370,22 @@ export const CreateListingPage: React.FC = () => {
         country: "US",
         limit: 5,
       });
-      const app = result?.data?.data?.apps?.[0];
+      let app = result?.data?.data?.apps?.[0] ?? null;
+      const backendFailed = result?.success === false;
+
+      if (!app && storeImportPlatform === "ios") {
+        try {
+          app = (await searchAppleApps(input, "US", 5))[0] ?? null;
+        } catch {
+          app = null;
+        }
+      }
 
       if (!app) {
         setStoreImportError(
-          "No matching store app was found. Try a direct App Store or Play Store URL.",
+          backendFailed
+            ? "The store import service is unreachable right now. You can skip this and fill in the details manually below."
+            : "No matching store app was found. Try a direct App Store or Play Store URL, or skip this and fill in the details manually below.",
         );
         return;
       }
@@ -705,17 +732,31 @@ export const CreateListingPage: React.FC = () => {
                       </div>
 
                       <div className="space-y-6">
+                        {!showStoreImport ? (
+                          <button
+                            type="button"
+                            onClick={() => setShowStoreImport(true)}
+                            className="flex w-full items-center gap-2 rounded-[8px] border border-dashed border-[#1d1d1f]/[0.15] bg-[#f5f5f7] p-4 text-[13px] font-semibold text-[#0071e3] transition-colors duration-300 hover:border-[#0071e3]/40 dark:border-white/[0.15] dark:bg-[#1d1d1f]"
+                          >
+                            <Store size={16} /> Already on the App Store or
+                            Google Play? Import the details automatically
+                          </button>
+                        ) : (
                         <div className="rounded-[8px] border border-[#1d1d1f]/[0.08] bg-[#f5f5f7] p-5 transition-colors duration-300 dark:border-white/[0.08] dark:bg-[#1d1d1f]">
                           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                               <p className="flex items-center gap-2 text-[13px] font-semibold text-[#1d1d1f] transition-colors duration-300 dark:text-white">
                                 <Store size={16} className="text-[#0071e3]" />{" "}
                                 Import real store details
+                                <span className="rounded-full bg-[#1d1d1f]/[0.06] px-2 py-0.5 text-[11px] font-medium text-[#1d1d1f]/55 dark:bg-white/[0.08] dark:text-white/55">
+                                  Optional
+                                </span>
                               </p>
                               <p className="mt-1 text-[13px] leading-5 text-[#1d1d1f]/55 transition-colors duration-300 dark:text-white/55">
                                 Pull the name, icon, screenshots, category,
                                 description, and store link from Apple App Store
-                                or Google Play.
+                                or Google Play. No store listing yet? Skip this
+                                and fill in the details below.
                               </p>
                             </div>
                             <div className="flex rounded-full bg-white p-1 dark:bg-[#2a2a2d]">
@@ -766,6 +807,19 @@ export const CreateListingPage: React.FC = () => {
                             </button>
                           </div>
 
+                          {!importedStoreApp ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowStoreImport(false);
+                                setStoreImportError(null);
+                              }}
+                              className="mt-3 text-[13px] font-semibold text-[#0071e3] hover:underline"
+                            >
+                              Skip — I&apos;ll enter the details manually
+                            </button>
+                          ) : null}
+
                           {storeImportError ? (
                             <p className="mt-3 flex items-start gap-2 text-[13px] leading-5 text-red-500">
                               <AlertCircle
@@ -810,6 +864,7 @@ export const CreateListingPage: React.FC = () => {
                             </div>
                           ) : null}
                         </div>
+                        )}
 
                         <div>
                           <label className="text-[12px] text-[#1d1d1f]/48 dark:text-white/48 uppercase tracking-wide mb-3 block transition-colors duration-300">
@@ -1259,7 +1314,7 @@ export const CreateListingPage: React.FC = () => {
                                 review. These remain private until approved.
                               </p>
                             </div>
-                            <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-[14px] font-semibold text-[#1d1d1f] shadow-sm transition-all hover:text-[#0071e3] dark:bg-[#2a2a2d] dark:text-white">
+                            <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-white border border-border px-5 py-3 text-[14px] font-semibold text-[#1d1d1f] transition-all hover:text-[#0071e3] dark:bg-[#2a2a2d] dark:text-white">
                               <Upload size={16} />
                               Upload
                               <input

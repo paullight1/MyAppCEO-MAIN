@@ -31,7 +31,7 @@ export const StatTile: React.FC<StatTileProps> = ({
 }) => (
     <div
         className={cn(
-            variant === 'card' && 'rounded-2xl border border-border bg-card p-5 shadow-sm',
+            variant === 'card' && 'rounded-2xl border border-border bg-card p-5',
             align === 'right' && 'text-right',
             className,
         )}
