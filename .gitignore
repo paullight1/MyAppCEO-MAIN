@@ -26,3 +26,10 @@ yarn-error.log*
 # Vite / test artifacts
 .vite/
 coverage/
+
+# Vercel
+.vercel/
+
+# Local agent tooling state (contains absolute machine paths)
+.labx/browser-bridge/
+.labx/mcp.json
