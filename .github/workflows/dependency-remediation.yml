@@ -1,0 +1,68 @@
+name: Dependency Remediation
+
+on:
+  push:
+    branches:
+      - security/p0-hardening-20260820
+    paths:
+      - .github/workflows/dependency-remediation.yml
+
+permissions:
+  contents: write
+
+jobs:
+  remediate-web-dependencies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout hardening branch
+        uses: actions/checkout@v4
+        with:
+          ref: security/p0-hardening-20260820
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: myappceo/package-lock.json
+
+      - name: Install current dependencies
+        working-directory: myappceo
+        run: npm ci
+
+      - name: Apply non-breaking audit fixes
+        working-directory: myappceo
+        run: npm audit fix
+
+      - name: Upgrade Vitest security boundary
+        working-directory: myappceo
+        run: npm install --save-dev vitest@4.1.11
+
+      - name: Typecheck
+        working-directory: myappceo
+        run: npm run typecheck
+
+      - name: Unit tests
+        working-directory: myappceo
+        run: npm test
+
+      - name: Production build
+        working-directory: myappceo
+        run: npm run build
+
+      - name: Require clean dependency audit
+        working-directory: myappceo
+        run: npm audit --audit-level=moderate
+
+      - name: Commit verified dependency updates
+        run: |
+          if git diff --quiet -- myappceo/package.json myappceo/package-lock.json; then
+            echo "No dependency changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- myappceo/package.json myappceo/package-lock.json
+          git commit -m "Harden web dependency tree"
+          git push origin HEAD:security/p0-hardening-20260820
