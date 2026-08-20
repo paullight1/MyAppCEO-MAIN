@@ -24,6 +24,12 @@ export interface PayoutReadiness {
 export interface RevenueVerificationResult {
   verified: boolean;
   revenue?: number;
+  mrr?: number;
+  currency?: string;
+  activeSubscriptions?: number;
+  source?: 'stripe_subscriptions' | string;
+  reason?: string;
+  verifiedAt?: string;
   evidenceId?: string;
   status?: 'pending' | 'approved' | 'rejected' | 'needs_more_info';
   reviewerNote?: string;
@@ -124,11 +130,13 @@ export const usePayments = () => {
       ),
     );
 
-  const verifyRevenue = (appId: string, stripeAccountId: string) =>
+  // The backend derives app ownership and Stripe account identity from the
+  // authenticated listing; callers never provide a Stripe account id.
+  const verifyRevenue = (listingId: string) =>
     run(() =>
       apiPost<ApiResponse<RevenueVerificationResult>>(
-        '/payments/verify-revenue',
-        { appId, stripeAccountId },
+        `/payments/listings/${listingId}/verify-revenue`,
+        {},
       ),
     );
 
