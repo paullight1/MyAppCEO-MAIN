@@ -18,6 +18,7 @@ export type AdminPermission =
   | 'audit_log'
   | 'content_management'
   | 'identity_verification';
+export type AdminRouteAccess = 'allow' | 'sign_in' | 'forbidden';
 
 const ADMIN_ROLE_SET = new Set<string>(ADMIN_ROLES);
 
@@ -85,4 +86,20 @@ export const getAdminPermissionForPath = (pathname: string): AdminPermission | n
   if (pathname === '/audit-log') return 'audit_log';
   if (pathname.startsWith('/admin/')) return 'review_queue';
   return null;
+};
+
+export const resolveAdminRouteAccess = (
+  user: User | null | undefined,
+  profileRole: unknown,
+  pathname: string,
+): AdminRouteAccess => {
+  if (!user) return 'sign_in';
+  if (!getIsAdminUser(user, profileRole)) return 'forbidden';
+
+  const permission = getAdminPermissionForPath(pathname);
+  if (permission && !hasAdminPermission(user, profileRole, permission)) {
+    return 'forbidden';
+  }
+
+  return 'allow';
 };
