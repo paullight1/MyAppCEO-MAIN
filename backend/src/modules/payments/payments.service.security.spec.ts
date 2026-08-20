@@ -1,5 +1,5 @@
 import { ForbiddenException } from '@nestjs/common';
-import { PaymentsService } from './payments.service';
+import { RevenueVerificationService } from './revenue-verification.service';
 
 const listing = {
   id: 'listing-1',
@@ -10,10 +10,22 @@ const listing = {
   revenueVerified: false,
 };
 
-const createDb = (ownedListing = listing) => {
-  const limit = jest.fn().mockResolvedValue([ownedListing]);
-  const whereSelect = jest.fn().mockReturnValue({ limit });
-  const from = jest.fn().mockReturnValue({ where: whereSelect });
+const createDb = (
+  ownedListing = listing,
+  summaryRows: any[] = [],
+) => {
+  const listingLimit = jest.fn().mockResolvedValue([ownedListing]);
+  const listingWhere = jest.fn().mockReturnValue({ limit: listingLimit });
+  const listingFrom = jest.fn().mockReturnValue({ where: listingWhere });
+
+  const summaryGroupBy = jest.fn().mockResolvedValue(summaryRows);
+  const summaryWhere = jest.fn().mockReturnValue({ groupBy: summaryGroupBy });
+  const summaryFrom = jest.fn().mockReturnValue({ where: summaryWhere });
+
+  const select = jest
+    .fn()
+    .mockReturnValueOnce({ from: listingFrom })
+    .mockReturnValueOnce({ from: summaryFrom });
 
   const returning = jest.fn().mockResolvedValue([
     { ...ownedListing, revenueVerified: true, monthlyRevenue: '125.50' },
@@ -23,68 +35,52 @@ const createDb = (ownedListing = listing) => {
 
   return {
     db: {
-      select: jest.fn().mockReturnValue({ from }),
+      select,
       update: jest.fn().mockReturnValue({ set }),
     },
     set,
   };
 };
 
-const createStripe = () => ({
-  payouts: {
-    list: jest.fn().mockResolvedValue({ data: [] }),
-  },
+const createPaymentsService = () => ({
+  getConnectStatus: jest.fn().mockResolvedValue({
+    provider: 'stripe',
+    connected: true,
+    accountId: 'acct_owner',
+    onboardingComplete: true,
+    chargesEnabled: true,
+    payoutsEnabled: true,
+    providerAvailable: true,
+    requirementsDue: [],
+  }),
 });
 
-const createService = (db: any, stripe: ReturnType<typeof createStripe>) =>
-  new PaymentsService(
-    stripe as any,
-    { from: jest.fn() } as any,
-    db as any,
-  );
-
-describe('PaymentsService revenue verification security', () => {
+describe('RevenueVerificationService security', () => {
   it('rejects verification when the authenticated user does not own the listing', async () => {
     const { db } = createDb();
-    const stripe = createStripe();
-    const service = createService(db, stripe);
+    const payments = createPaymentsService();
+    const service = new RevenueVerificationService(payments as any, db as any);
 
     await expect(
-      service.verifyRevenue('listing-1', 'attacker-user'),
+      service.verifyListingRevenue('listing-1', 'attacker-user'),
     ).rejects.toBeInstanceOf(ForbiddenException);
-    expect(stripe.payouts.list).not.toHaveBeenCalled();
+    expect(payments.getConnectStatus).not.toHaveBeenCalled();
   });
 
-  it('uses server-owned subscription evidence instead of caller-selected Stripe payouts', async () => {
-    const { db, set } = createDb();
-    const stripe = createStripe();
-    const service = createService(db, stripe);
+  it('persists MRR only from server-bound active subscription evidence', async () => {
+    const { db, set } = createDb(listing, [
+      {
+        currency: 'usd',
+        totalMrrMinor: 12550,
+        activeSubscriptions: 2,
+      },
+    ]);
+    const payments = createPaymentsService();
+    const service = new RevenueVerificationService(payments as any, db as any);
 
-    jest.spyOn(service, 'getConnectStatus').mockResolvedValue({
-      provider: 'stripe',
-      connected: true,
-      accountId: 'acct_owner',
-      onboardingComplete: true,
-      chargesEnabled: true,
-      payoutsEnabled: true,
-      providerAvailable: true,
-      requirementsDue: [],
-    } as any);
-    jest.spyOn(service, 'getSubscriptionSummary').mockResolvedValue({
-      activeSubscriptions: 2,
-      byCurrency: [
-        {
-          currency: 'usd',
-          totalMrrMinor: 12550,
-          totalMrr: 125.5,
-          activeSubscriptions: 2,
-        },
-      ],
-    });
+    const result = await service.verifyListingRevenue('listing-1', 'owner-user');
 
-    const result = await service.verifyRevenue('listing-1', 'owner-user');
-
-    expect(stripe.payouts.list).not.toHaveBeenCalled();
+    expect(payments.getConnectStatus).toHaveBeenCalledWith('owner-user');
     expect(set).toHaveBeenCalledWith(
       expect.objectContaining({
         revenueVerified: true,
@@ -101,29 +97,14 @@ describe('PaymentsService revenue verification security', () => {
   });
 
   it('does not combine different currencies into a single verified MRR', async () => {
-    const { db, set } = createDb();
-    const stripe = createStripe();
-    const service = createService(db, stripe);
+    const { db, set } = createDb(listing, [
+      { currency: 'usd', totalMrrMinor: 10000, activeSubscriptions: 1 },
+      { currency: 'ngn', totalMrrMinor: 500000, activeSubscriptions: 1 },
+    ]);
+    const payments = createPaymentsService();
+    const service = new RevenueVerificationService(payments as any, db as any);
 
-    jest.spyOn(service, 'getConnectStatus').mockResolvedValue({
-      provider: 'stripe',
-      connected: true,
-      accountId: 'acct_owner',
-      onboardingComplete: true,
-      chargesEnabled: true,
-      payoutsEnabled: true,
-      providerAvailable: true,
-      requirementsDue: [],
-    } as any);
-    jest.spyOn(service, 'getSubscriptionSummary').mockResolvedValue({
-      activeSubscriptions: 2,
-      byCurrency: [
-        { currency: 'usd', totalMrrMinor: 10000, totalMrr: 100, activeSubscriptions: 1 },
-        { currency: 'ngn', totalMrrMinor: 500000, totalMrr: 5000, activeSubscriptions: 1 },
-      ],
-    });
-
-    const result = await service.verifyRevenue('listing-1', 'owner-user');
+    const result = await service.verifyListingRevenue('listing-1', 'owner-user');
 
     expect(result).toMatchObject({
       verified: false,
