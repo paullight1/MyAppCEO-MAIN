@@ -14,6 +14,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
 import { RevenueVerificationService } from './revenue-verification.service';
+import { VerifyRevenueDto } from './dto/verify-revenue.dto';
 
 @ApiTags('Payments / Verification')
 @Controller('payments')
@@ -77,6 +78,17 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Verify listing revenue from server-bound Stripe subscription evidence' })
   async verifyRevenue(@Param('id') id: string, @CurrentUser() user: any) {
     return this.revenueVerificationService.verifyListingRevenue(id, user.id);
+  }
+
+  // Safe compatibility route for existing clients that identify the target by
+  // app id. Global ValidationPipe rejects legacy stripeAccountId fields, and the
+  // service resolves both listing and connected account from authenticated state.
+  @Post('verify-revenue')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Verify owned app revenue using server-bound Stripe evidence' })
+  async verifyRevenueByApp(@Body() body: VerifyRevenueDto, @CurrentUser() user: any) {
+    return this.revenueVerificationService.verifyOwnedAppRevenue(body.appId, user.id);
   }
 
   @Get('disputes')
