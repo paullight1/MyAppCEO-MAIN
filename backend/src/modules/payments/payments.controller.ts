@@ -13,11 +13,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
+import { RevenueVerificationService } from './revenue-verification.service';
 
 @ApiTags('Payments / Verification')
 @Controller('payments')
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(
+    private readonly paymentsService: PaymentsService,
+    private readonly revenueVerificationService: RevenueVerificationService,
+  ) {}
 
   @Post('connect')
   @UseGuards(JwtAuthGuard)
@@ -67,12 +71,12 @@ export class PaymentsController {
     return this.paymentsService.getRevenueVerification(id, user.id);
   }
 
-  @Post('verify-revenue')
+  @Post('listings/:id/verify-revenue')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Verify app revenue via connected Stripe account' })
-  async verifyRevenue(@Body() body: { appId: string; stripeAccountId: string }) {
-    return this.paymentsService.verifyRevenue(body.appId, body.stripeAccountId);
+  @ApiOperation({ summary: 'Verify listing revenue from server-bound Stripe subscription evidence' })
+  async verifyRevenue(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.revenueVerificationService.verifyListingRevenue(id, user.id);
   }
 
   @Get('disputes')
