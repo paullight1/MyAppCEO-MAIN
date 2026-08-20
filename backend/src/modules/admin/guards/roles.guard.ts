@@ -58,7 +58,9 @@ export class RolesGuard implements CanActivate {
     userRoles: string[],
     requiredRoles: AdminRole[],
   ): boolean {
-    if (userRoles.includes(AdminRole.SUPER_ADMIN) || userRoles.includes(AdminRole.ADMIN)) {
+    // Super-admin is the only global override. A regular admin must be
+    // explicitly permitted by the route just like every other role.
+    if (userRoles.includes(AdminRole.SUPER_ADMIN)) {
       return true;
     }
 
