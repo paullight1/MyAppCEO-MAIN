@@ -3,11 +3,8 @@ import {
   UnauthorizedException,
   BadRequestException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { UsersService } from '../users/users.service';
-import * as bcrypt from 'bcrypt';
 
 export interface BrokerAuthResult {
   session: { access_token: string; refresh_token?: string | null; expires_in?: number | null };
@@ -16,16 +13,11 @@ export interface BrokerAuthResult {
 
 @Injectable()
 export class AuthService {
-  // Stateless Supabase client used only to broker GoTrue auth on the server.
-  // Prefer the anon key (auth endpoints don't need service-role); fall back to
-  // the service-role key so the broker still works if only that is configured.
+  // Supabase is the sole identity authority. This stateless client is used only
+  // to broker GoTrue auth on the server; it does not mint platform-local JWTs.
   private readonly supabaseAuth: SupabaseClient;
 
-  constructor(
-    private usersService: UsersService,
-    private jwtService: JwtService,
-    private configService: ConfigService,
-  ) {
+  constructor(private configService: ConfigService) {
     const url = this.configService.get<string>('SUPABASE_URL');
     const key =
       this.configService.get<string>('SUPABASE_ANON_KEY') ||
@@ -67,8 +59,6 @@ export class AuthService {
     password: string,
     metadata: Record<string, unknown> = {},
   ): Promise<{ session: BrokerAuthResult['session'] | null; user: BrokerAuthResult['user'] | null; needsEmailConfirmation: boolean }> {
-    // Only profile metadata is accepted here. Authorization metadata is never
-    // accepted from public signup requests.
     const safeMetadata = {
       full_name: typeof metadata.full_name === 'string' ? metadata.full_name : undefined,
     };
@@ -105,37 +95,5 @@ export class AuthService {
     } catch {
       // Non-fatal: cookies are cleared regardless of remote revocation success.
     }
-  }
-
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
-    if (user && await bcrypt.compare(pass, user.passwordHash)) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { passwordHash, ...result } = user;
-      return result;
-    }
-    return null;
-  }
-
-  async login(user: any) {
-    const payload = {
-      email: user.email,
-      sub: user.id,
-      role: user.role,
-    };
-    return {
-      access_token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        fullName: user.fullName,
-      },
-    };
-  }
-
-  async register(userData: any) {
-    const user = await this.usersService.create(userData);
-    return this.login(user);
   }
 }
