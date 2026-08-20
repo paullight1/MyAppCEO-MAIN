@@ -16,7 +16,7 @@ export class UsersService {
   async findById(id: string) {
     const [user] = await this.db.select().from(users).where(eq(users.id, id));
     if (!user) throw new NotFoundException('User not found');
-    
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordHash, ...result } = user;
     return result;
@@ -27,11 +27,13 @@ export class UsersService {
     if (existing) throw new ConflictException('User already exists');
 
     const passwordHash = await bcrypt.hash(userData.password, 10);
-    
+
+    // Public registration never controls authorization. Privileged roles must
+    // be assigned through a separate authenticated/admin-only workflow.
     const [newUser] = await this.db.insert(users).values({
       email: userData.email,
       passwordHash,
-      role: userData.role || 'ceo',
+      role: 'ceo',
       fullName: userData.fullName,
     }).returning();
 
