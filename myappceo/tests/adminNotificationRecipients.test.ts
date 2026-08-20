@@ -3,7 +3,7 @@ import {
   getAdminNotificationCandidates,
   getEligiblePromotionalRecipients,
   type AdminNotificationRecipientUser,
-} from '../src/utils/adminNotificationRecipients';
+} from '../../admin/src/utils/adminNotificationRecipients';
 
 const USERS: AdminNotificationRecipientUser[] = [
   { id: '1', role: 'creator', status: 'active' },
