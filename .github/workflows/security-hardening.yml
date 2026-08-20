@@ -47,6 +47,7 @@ jobs:
               sha: context.sha,
               state,
               context: 'security-hardening/backend',
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
               description: state === 'success'
                 ? 'Focused backend security regressions passed'
                 : 'Focused backend security regressions failed',
