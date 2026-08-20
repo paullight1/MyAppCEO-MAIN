@@ -68,6 +68,9 @@ jobs:
           cache-dependency-path: myappceo/package-lock.json
       - name: Install
         run: npm ci
+      - name: Dependency audit (informational)
+        continue-on-error: true
+        run: npm audit --audit-level=moderate
       - name: Typecheck
         run: npm run typecheck
       - name: Unit tests
