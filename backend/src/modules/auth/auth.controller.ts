@@ -47,7 +47,6 @@ export class AuthController {
   ) {
     const result = await this.authService.signUpWithSupabase(body.email, body.password, {
       full_name: body.fullName,
-      ...(body.role ? { role: body.role } : {}),
     });
     if (result.session) {
       setAuthCookies(res, result.session);
@@ -98,9 +97,12 @@ export class AuthController {
     return { success: true };
   }
 
+  // Legacy credential endpoints remain temporarily for backwards compatibility,
+  // but public registration is constrained by RegisterDto/UsersService and can
+  // never assign a privileged role.
   @Post('login')
   @Throttle({ default: { limit: 5, ttl: 60000 } })
-  @ApiOperation({ summary: 'Login with email and password' })
+  @ApiOperation({ summary: 'Legacy login with email and password' })
   @UsePipes(new ValidationPipe({ transform: true }))
   async login(@Body() body: LoginDto) {
     const user = await this.authService.validateUser(body.email, body.password);
@@ -112,7 +114,7 @@ export class AuthController {
 
   @Post('register')
   @Throttle({ default: { limit: 5, ttl: 60000 } })
-  @ApiOperation({ summary: 'Register a new user' })
+  @ApiOperation({ summary: 'Legacy registration (always creates a non-privileged CEO user)' })
   @UsePipes(new ValidationPipe({ transform: true }))
   async register(@Body() body: RegisterDto) {
     return this.authService.register(body);
