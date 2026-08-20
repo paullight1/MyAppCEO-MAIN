@@ -130,14 +130,23 @@ export const usePayments = () => {
       ),
     );
 
-  // The backend derives app ownership and Stripe account identity from the
-  // authenticated listing; callers never provide a Stripe account id.
-  const verifyRevenue = (listingId: string) =>
+  /**
+   * Canonical callers pass a listing id. Older finance UI still passes
+   * `(appId, stripeAccountId)`; the second argument is used only to detect that
+   * legacy call shape and is NEVER transmitted. The server resolves the actual
+   * connected account from the authenticated seller.
+   */
+  const verifyRevenue = (listingOrAppId: string, legacyStripeAccountId?: string) =>
     run(() =>
-      apiPost<ApiResponse<RevenueVerificationResult>>(
-        `/payments/listings/${listingId}/verify-revenue`,
-        {},
-      ),
+      legacyStripeAccountId !== undefined
+        ? apiPost<ApiResponse<RevenueVerificationResult>>(
+            '/payments/verify-revenue',
+            { appId: listingOrAppId },
+          )
+        : apiPost<ApiResponse<RevenueVerificationResult>>(
+            `/payments/listings/${listingOrAppId}/verify-revenue`,
+            {},
+          ),
     );
 
   const submitRevenueEvidence = (input: RevenueEvidenceInput) =>
