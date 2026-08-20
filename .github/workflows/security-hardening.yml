@@ -1,0 +1,35 @@
+name: Security Hardening
+
+on:
+  push:
+    branches:
+      - security/p0-hardening-20260820
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  backend-security:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Run focused security regression tests
+        run: npm test -- --runInBand register.dto.security.spec.ts users.service.security.spec.ts payments.service.security.spec.ts
