@@ -65,6 +65,28 @@ describe('admin UI permissions mirror backend authorization', () => {
     expectPermission('moderator', 'identity_verification', false);
   });
 
+  it('maps standalone admin routes to the same permission categories as linked web routes', () => {
+    const expected: Array<[string, webRoles.AdminPermission | null]> = [
+      ['/review', 'review_queue'],
+      ['/admin/review', 'review_queue'],
+      ['/notifications', 'notifications'],
+      ['/admin/notifications', 'notifications'],
+      ['/blog', 'content_management'],
+      ['/admin/blog', 'content_management'],
+      ['/verifications', 'identity_verification'],
+      ['/admin/verifications', 'identity_verification'],
+      ['/audit-log', 'audit_log'],
+      ['/marketplace', null],
+      ['/documentation', null],
+    ];
+
+    for (const roles of MODULES) {
+      for (const [path, permission] of expected) {
+        expect(roles.getAdminPermissionForPath(path), path).toBe(permission);
+      }
+    }
+  });
+
   it('keeps the customer and standalone-admin permission implementations in parity', () => {
     for (const role of webRoles.ADMIN_ROLES) {
       for (const permission of [
