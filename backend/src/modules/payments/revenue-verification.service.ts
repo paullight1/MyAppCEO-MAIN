@@ -35,6 +35,25 @@ export class RevenueVerificationService {
     @Inject(DRIZZLE) private readonly db: any,
   ) {}
 
+  /**
+   * Compatibility path for clients that historically keyed revenue verification
+   * by app id. The listing is resolved using BOTH app id and authenticated seller
+   * id before entering the canonical listing verification flow.
+   */
+  async verifyOwnedAppRevenue(appId: string, userId: string) {
+    const [listing] = await this.db
+      .select()
+      .from(listings)
+      .where(and(eq(listings.appId, appId), eq(listings.sellerId, userId)))
+      .limit(1);
+
+    if (!listing) {
+      throw new NotFoundException('Owned listing for app not found');
+    }
+
+    return this.verifyListingRevenue(listing.id, userId);
+  }
+
   async verifyListingRevenue(listingId: string, userId: string) {
     const listing = await this.findOwnedListingOrThrow(listingId, userId);
 
