@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       - name: Run focused security regression tests
-        run: npm test -- --runInBand register.dto.security.spec.ts users.service.security.spec.ts roles.guard.security.spec.ts payments.service.security.spec.ts
+        run: npm test -- --runInBand register.dto.security.spec.ts auth.controller.security.spec.ts users.service.security.spec.ts roles.guard.security.spec.ts payments.service.security.spec.ts
 
       - name: Publish backend security status
         if: always()
