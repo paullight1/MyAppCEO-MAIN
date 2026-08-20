@@ -43,7 +43,9 @@ export class AuthService {
       id: user?.id,
       email: user?.email ?? null,
       fullName: user?.user_metadata?.full_name ?? user?.user_metadata?.fullName ?? null,
-      role: user?.app_metadata?.role ?? user?.user_metadata?.role ?? null,
+      // Authorization roles are server-owned app_metadata/database state. Never
+      // reflect a role from caller-controlled user_metadata as authoritative.
+      role: user?.app_metadata?.role ?? null,
     };
   }
 
@@ -65,10 +67,15 @@ export class AuthService {
     password: string,
     metadata: Record<string, unknown> = {},
   ): Promise<{ session: BrokerAuthResult['session'] | null; user: BrokerAuthResult['user'] | null; needsEmailConfirmation: boolean }> {
+    // Only profile metadata is accepted here. Authorization metadata is never
+    // accepted from public signup requests.
+    const safeMetadata = {
+      full_name: typeof metadata.full_name === 'string' ? metadata.full_name : undefined,
+    };
     const { data, error } = await this.supabaseAuth.auth.signUp({
       email,
       password,
-      options: { data: metadata },
+      options: { data: safeMetadata },
     });
     if (error) {
       throw new BadRequestException(error.message);
@@ -111,10 +118,10 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { 
-      email: user.email, 
-      sub: user.id, 
-      role: user.role 
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      role: user.role,
     };
     return {
       access_token: this.jwtService.sign(payload),
@@ -122,8 +129,8 @@ export class AuthService {
         id: user.id,
         email: user.email,
         role: user.role,
-        fullName: user.fullName
-      }
+        fullName: user.fullName,
+      },
     };
   }
 
