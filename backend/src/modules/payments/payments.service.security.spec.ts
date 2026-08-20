@@ -67,6 +67,20 @@ describe('RevenueVerificationService security', () => {
     expect(payments.getConnectStatus).not.toHaveBeenCalled();
   });
 
+  it('resolves legacy app verification to a listing owned by the authenticated seller', async () => {
+    const { db } = createDb();
+    const payments = createPaymentsService();
+    const service = new RevenueVerificationService(payments as any, db as any);
+    const verifyListingRevenue = jest
+      .spyOn(service, 'verifyListingRevenue')
+      .mockResolvedValue({ verified: true, status: 'approved' } as any);
+
+    const result = await service.verifyOwnedAppRevenue('app-1', 'owner-user');
+
+    expect(verifyListingRevenue).toHaveBeenCalledWith('listing-1', 'owner-user');
+    expect(result).toMatchObject({ verified: true, status: 'approved' });
+  });
+
   it('persists MRR only from server-bound active subscription evidence', async () => {
     const { db, set } = createDb(listing, [
       {
