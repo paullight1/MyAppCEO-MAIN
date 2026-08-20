@@ -20,14 +20,21 @@ export type AdminPermission =
   | 'identity_verification';
 
 const ADMIN_ROLE_SET = new Set<string>(ADMIN_ROLES);
+
+// Keep this matrix aligned with the actual backend/RLS enforcement surfaces:
+// - review_queue: ModerationController queue/decision routes
+// - notifications: AdminNotificationsController
+// - audit_log: ModerationController audit-logs (super_admin only)
+// - content_management: blog_posts RLS editor predicate
+// - identity_verification: user_verifications/storage RLS reviewer predicate
 const ADMIN_ROLE_PERMISSIONS: Record<AdminRole, AdminPermission[]> = {
-  admin: ['review_queue', 'notifications', 'audit_log', 'content_management', 'identity_verification'],
+  admin: ['content_management', 'identity_verification'],
   super_admin: ['review_queue', 'notifications', 'audit_log', 'content_management', 'identity_verification'],
-  moderator: ['review_queue'],
-  finance: ['audit_log'],
-  analyst: ['review_queue', 'audit_log'],
-  support_agent: ['notifications', 'audit_log', 'identity_verification'],
-  finance_operator: ['audit_log'],
+  moderator: ['review_queue', 'notifications'],
+  finance: [],
+  analyst: [],
+  support_agent: ['notifications', 'identity_verification'],
+  finance_operator: [],
   content_reviewer: ['review_queue', 'content_management'],
 };
 
@@ -66,10 +73,15 @@ export const hasAdminPermission = (
 };
 
 export const getAdminPermissionForPath = (pathname: string): AdminPermission | null => {
-  if (pathname === '/admin/review') return 'review_queue';
-  if (pathname === '/admin/notifications') return 'notifications';
-  if (pathname === '/admin/blog' || pathname.startsWith('/admin/blog/')) return 'content_management';
-  if (pathname === '/admin/verifications') return 'identity_verification';
+  if (pathname === '/review' || pathname === '/admin/review') return 'review_queue';
+  if (pathname === '/notifications' || pathname === '/admin/notifications') return 'notifications';
+  if (
+    pathname === '/blog' ||
+    pathname.startsWith('/blog/') ||
+    pathname === '/admin/blog' ||
+    pathname.startsWith('/admin/blog/')
+  ) return 'content_management';
+  if (pathname === '/verifications' || pathname === '/admin/verifications') return 'identity_verification';
   if (pathname === '/audit-log') return 'audit_log';
   if (pathname.startsWith('/admin/')) return 'review_queue';
   return null;
