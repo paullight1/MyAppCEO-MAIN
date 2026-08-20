@@ -87,6 +87,20 @@ describe('admin UI permissions mirror backend authorization', () => {
     }
   });
 
+  it('fails closed for unauthenticated, non-admin, and under-privileged direct routes', () => {
+    for (const roles of MODULES) {
+      expect(roles.resolveAdminRouteAccess(null, null, '/review')).toBe('sign_in');
+      expect(roles.resolveAdminRouteAccess(userWithRole('ceo'), null, '/')).toBe('forbidden');
+      expect(roles.resolveAdminRouteAccess(userWithRole('admin'), null, '/')).toBe('allow');
+      expect(roles.resolveAdminRouteAccess(userWithRole('admin'), null, '/review')).toBe('forbidden');
+      expect(roles.resolveAdminRouteAccess(userWithRole('admin'), null, '/blog')).toBe('allow');
+      expect(roles.resolveAdminRouteAccess(userWithRole('moderator'), null, '/review')).toBe('allow');
+      expect(roles.resolveAdminRouteAccess(userWithRole('moderator'), null, '/notifications')).toBe('allow');
+      expect(roles.resolveAdminRouteAccess(userWithRole('moderator'), null, '/audit-log')).toBe('forbidden');
+      expect(roles.resolveAdminRouteAccess(userWithRole('super_admin'), null, '/audit-log')).toBe('allow');
+    }
+  });
+
   it('keeps the customer and standalone-admin permission implementations in parity', () => {
     for (const role of webRoles.ADMIN_ROLES) {
       for (const permission of [
