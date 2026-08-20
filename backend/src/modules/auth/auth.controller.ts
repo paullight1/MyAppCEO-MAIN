@@ -19,11 +19,8 @@ import {
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // ─── Cookie-based auth broker (httpOnly sessions) ──────────────────────────
-  // The backend performs the Supabase sign-in and stores tokens in httpOnly
-  // cookies, so the browser never handles them. Tokens are never returned in
-  // the response body.
-
+  // Supabase is the only authentication authority. The backend brokers browser
+  // sessions into httpOnly cookies but never issues a separate local JWT.
   @Post('session')
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOperation({ summary: 'Broker login: sign in and set httpOnly session cookies' })
@@ -70,7 +67,6 @@ export class AuthController {
       setAuthCookies(res, session);
       return { user };
     } catch (err) {
-      // A bad/expired refresh token should not leave stale cookies behind.
       clearAuthCookies(res);
       throw err;
     }
@@ -95,29 +91,6 @@ export class AuthController {
     }
     clearAuthCookies(res);
     return { success: true };
-  }
-
-  // Legacy credential endpoints remain temporarily for backwards compatibility,
-  // but public registration is constrained by RegisterDto/UsersService and can
-  // never assign a privileged role.
-  @Post('login')
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
-  @ApiOperation({ summary: 'Legacy login with email and password' })
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async login(@Body() body: LoginDto) {
-    const user = await this.authService.validateUser(body.email, body.password);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    return this.authService.login(user);
-  }
-
-  @Post('register')
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
-  @ApiOperation({ summary: 'Legacy registration (always creates a non-privileged CEO user)' })
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async register(@Body() body: RegisterDto) {
-    return this.authService.register(body);
   }
 
   @Get('profile')
